@@ -2,12 +2,12 @@
 session_start();
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+
 <?php
 $jobs_type = ["รอดำเนินการ", "กำลังดำเนินการ", "ดำเนินการเสร็จสิ้น"];
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -36,14 +36,26 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
 
 <body>
     <?php require 'assets/navbar.php' ?>
-    <?php
-        if (isset($_SESSION["userId"])) {
-            echo '
-            <div id="job-list"></div>
-            ';
-        }
-        ?>
-    
+    <div class="container mt-4">
+        <div class="d-flex justify-content-end">
+            <div class="dropdown">
+                <button class="btn search dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    เลือกการดำเนินการ
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <?php foreach ($jobs_type as $job_type): ?>
+                        <li><a class="dropdown-item cursor-pointer"
+                                onclick="filterJobs('<?php echo $job_type; ?>')"><?php echo $job_type; ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+
+        <div id="job-list"></div>
+
+
+    </div>
 
     <script>
         function filterJobs(status) {

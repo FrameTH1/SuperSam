@@ -1,7 +1,3 @@
-<?php
-session_start();
-?>
-
 <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
@@ -16,7 +12,7 @@ session_start();
             </a>
         </ul>
         <ul class="d-flex list-unstyled gap-1 my-auto">
-            <li class="h5 px-3 py-2 cursor-pointer">
+            <li class="h5 px-3 cursor-pointer">
                 <?php
                 if (isset($_SESSION["displayName"])) {
                     echo "<div class='dropdown'>
@@ -30,7 +26,7 @@ session_start();
                                         </ul>
                                     </div>";
                 } else {
-                    echo "<a class='h5 py-2 my-auto' onclick='goto(".'"login"'.");'>เข้าสู่ระบบ</a>";
+                    echo "<a class='h5' onclick='goto(".'"login"'.");'>เข้าสู่ระบบ</a>";
                 }
                 ?>
             </li>
