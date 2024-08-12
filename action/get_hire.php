@@ -76,7 +76,7 @@ if ($status == 'รอดำเนินการ') {
                 JOIN job_status ON jobs.status_id = job_status.id 
                 WHERE job_status.status_name = ? AND employer.user_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("si", $status_map[$status], $user_id);
+        $stmt->bind_param("ss", $status_map[$status], $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
 

@@ -26,7 +26,7 @@
                                         </ul>
                                     </div>";
                 } else {
-                    echo "<a class='h5' onclick='goto(".'"login"'.");'>เข้าสู่ระบบ</a>";
+                    echo "<a class='h5 cursor-pointer' onclick='goto(".'"login"'.");'>เข้าสู่ระบบ</a>";
                 }
                 ?>
             </li>

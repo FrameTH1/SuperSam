@@ -1,3 +1,8 @@
+<?php 
+session_start();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +21,7 @@
 <body>
     <?php require 'assets/navbar.php' ?>
     <div class="container mt-4">
-        test12345
+        <img src="" alt="" srcset="">
     </div>
 </body>
 

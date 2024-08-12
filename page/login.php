@@ -7,7 +7,7 @@
     <script>
         function runLiff() {
             liff.init({ liffId: "2005319575-G7VDXX62" }, () => {
-                if (!liff.isLoggedIn()) {
+                if (!liff.isLoggedIn({ scope: 'profile openid email' })) {
                     liff.login();
                 } else {
                     runApp();
@@ -17,16 +17,17 @@
 
         function runApp() {
             liff.getProfile().then(profile => {
-                checkAndRedirect(profile.userId, profile.displayName, profile.statusMessage, profile.pictureUrl);
+                checkAndRedirect(profile.userId, profile.displayName, profile.statusMessage, profile.pictureUrl, liff.getDecodedIDToken().email);
             }).catch(err => console.error(err));
         }
 
-        function checkAndRedirect(userId, displayName, statusMessage, pictureUrl) {
+        function checkAndRedirect(userId, displayName, statusMessage, pictureUrl, email) {
             var formData = new FormData();
             formData.append('userId', userId);
             formData.append('displayName', displayName);
             formData.append('statusMessage', statusMessage);
             formData.append('pictureUrl', pictureUrl);
+            formData.append('email', email);
 
             fetch('action/check_user.php', {
                 method: 'POST',
