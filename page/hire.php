@@ -37,20 +37,24 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
 <body>
     <?php require 'assets/navbar.php' ?>
     <div class="container mt-4">
-        <div class="d-flex justify-content-end">
+        <?php
+        if (isset($_SESSION['userId'])) {
+            echo '<div class="d-flex justify-content-end">
             <div class="dropdown">
                 <button class="btn search dropdown-toggle" type="button" id="dropdownMenuButton1"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     เลือกการดำเนินการ
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <?php foreach ($jobs_type as $job_type): ?>
-                        <li><a class="dropdown-item cursor-pointer"
-                                onclick="filterJobs('<?php echo $job_type; ?>')"><?php echo $job_type; ?></a></li>
-                    <?php endforeach; ?>
-                </ul>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">';
+            foreach ($jobs_type as $job_type) {
+                echo '<li><a class="dropdown-item cursor-pointer"
+                    onclick="filterJobs(\'' . $job_type . '\')">' . $job_type . '</a></li>';
+            }
+            echo '</ul>
             </div>
-        </div>
+        </div>';
+        }
+        ?>
 
         <div id="job-list"></div>
 

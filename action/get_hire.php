@@ -14,7 +14,11 @@ $status_map = [
     'ดำเนินการเสร็จสิ้น' => 'ดำเนินการเสร็จสิ้น'
 ];
 
-$user_id = $_SESSION["userId"];
+if (isset($_SESSION["userId"])) {
+    $user_id = $_SESSION["userId"];
+}else {
+    $user_id = null;
+}
 
 if ($status == 'รอดำเนินการ') {
     if (array_key_exists($status, $status_map)) {
