@@ -42,12 +42,10 @@
             $('#content').load('page/profile.php');
         } else if (page === 'find') {
             $('#content').load('page/find.php');
-        } else if (page === 'home') {
-            $('#content').load('page/home.php');
         } else if (page === 'hire') {
             $('#content').load('page/hire.php');
         } else {
-            $('#content').load('page/home.php');
+            $('#content').load('page/find.php');
         }
     });
 </script>

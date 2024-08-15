@@ -17,9 +17,10 @@ session_destroy();
             liff.init({ liffId: "2005319575-G7VDXX62" }, () => {
                 if (liff.isLoggedIn()) {
                     liff.logout();
-                    window.location = '?page=home'
                 }
             })
+
+            window.location = '?page=find'
         });
     </script>
 </head>

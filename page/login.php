@@ -36,7 +36,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.exists) {
-                        window.location.href = '?page=home'; // Redirect to profile page
+                        window.location.href = '?page=find';
                     } else {
                         alert('User not found. Added now.');
                         location.reload();

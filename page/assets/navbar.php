@@ -3,22 +3,22 @@
 
 <div class="container mt-3">
     <div class="d-flex justify-content-between" id="navbar">
-        <ul class="d-flex list-unstyled gap-2 my-auto">
+        <ul class="ms-3 d-flex list-unstyled gap-4 my-auto">
             <a href="?page=hire">
-                <li class="h5 px-3 py-2 cursor-pointer" role="button">จ้างงาน</li>
+                <li class="h5 py-2 cursor-pointer" role="button">จ้างงาน</li>
             </a>
             <a href="?page=find">
-                <li class="h5 px-3 py-2 cursor-pointer" role="button">หางาน</li>
+                <li class="h5 py-2 cursor-pointer" role="button">หางาน</li>
             </a>
         </ul>
-        <ul class="d-flex list-unstyled gap-1 my-auto">
-            <li class="h5 px-3 cursor-pointer">
+        <ul class="me-3 d-flex list-unstyled gap-1 my-auto">
+            <li class="h5 cursor-pointer">
                 <?php
                 if (isset($_SESSION["displayName"])) {
                     echo "<div class='dropdown'>
-                                        <button class='btn dropdown-toggle' type='button' id='dropdownMenuButtonProfile'
+                                        <button class='btn dropdown-toggle d-flex gap-2 align-items-center' type='button' id='dropdownMenuButtonProfile'
                                             data-bs-toggle='dropdown' aria-expanded='false'>
-                                            " . $_SESSION["displayName"] . "
+                                            <img class='rounded-3' style='height: calc(45px * 75 / 100); width: auto;' src='". $_SESSION["pictureUrl"] ."'>" . $_SESSION["displayName"] . "
                                         </button>
                                         <ul class='dropdown-menu' aria-labelledby='dropdownMenuButtonProfile'>
                                             <li><a class='dropdown-item cursor-pointer' onclick='goto(".'"profile"'.");'>แก้ไขข้อมูล</a></li>
