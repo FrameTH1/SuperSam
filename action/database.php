@@ -1,10 +1,11 @@
 <?php
-$servername = "43.229.148.5";
-$username = "Frame";
-$password = "Sukitxyz1@";
-$dbname = "lakhok";
+$servername = "157.245.59.56";
+$username = "aiclub";
+$password = "AIclub4321;";
+$dbname = "aiclub";
+$port = 3366;
 
 // Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+$conn = mysqli_connect($servername, $username, $password, $dbname, $port);
 
 ?>

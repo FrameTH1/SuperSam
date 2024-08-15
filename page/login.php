@@ -38,7 +38,6 @@
                     if (data.exists) {
                         window.location.href = '?page=find';
                     } else {
-                        alert('User not found. Added now.');
                         location.reload();
                     }
                 })
