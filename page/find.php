@@ -1,6 +1,9 @@
 <?php
 session_start();
-?>
+
+include "../action/database.php"
+
+    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +66,7 @@ session_start();
                     <!-- pc -->
                     <div class="m-auto gap-2 d-none d-lg-flex">
                         <p class="h1 text-white">ค้นหางาน</p>
-                        <p class="h1 text-neon-green">ที่ใช่</p>
+                        <p class="h1 text-neon-green">งานที่ใช่</p>
                         <p class="h1 text-white">ได้ใน</p>
                         <p class="h1 text-neon-green">ทันท่วงที</p>
                     </div>
@@ -97,174 +100,88 @@ session_start();
             </div>
             <div class="col d-flex shadow m-2">
                 <div class="m-auto d-flex flex-column align-items-center p-2">
-                <p class="h4 text-center">#2</p>
+                    <p class="h4 text-center">#2</p>
                     <p class="h5 text-center">ทำความสะอาด</p>
                 </div>
             </div>
             <div class="col d-flex shadow m-2">
                 <div class="m-auto d-flex flex-column align-items-center p-2">
-                <p class="h4 text-center">#3</p>
+                    <p class="h4 text-center">#3</p>
                     <p class="h5 text-center">ซ่อมสิ่งของ</p>
                 </div>
             </div>
             <div class="col d-flex shadow m-2">
                 <div class="m-auto d-flex flex-column align-items-center p-2">
-                <p class="h4 text-center">#4</p>
+                    <p class="h4 text-center">#4</p>
                     <p class="h5 text-center">ดูเเลเด็ก</p>
                 </div>
             </div>
             <div class="col d-flex shadow m-2">
                 <div class="m-auto d-flex flex-column align-items-center p-2">
-                <p class="h4 text-center">#5</p>
+                    <p class="h4 text-center">#5</p>
                     <p class="h5 text-center">งานทั่วไป</p>
                 </div>
             </div>
             <div class="col d-flex shadow m-2">
                 <div class="m-auto d-flex flex-column align-items-center p-2">
-                <p class="h4 text-center">#6</p>
+                    <p class="h4 text-center">#6</p>
                     <p class="h5 text-center">งานทั่วไป 2</p>
                 </div>
             </div>
             <div class="col d-flex shadow m-2">
                 <div class="m-auto d-flex flex-column align-items-center p-2">
-                <p class="h4 text-center">#7</p>
+                    <p class="h4 text-center">#7</p>
                     <p class="h5 text-center">งานทั่วไป 3</p>
                 </div>
             </div>
         </div>
 
         <div class="row mt-3">
-            <div class="col-6 col-lg-3 px-2 mt-2">
-                <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
-                <div class="px-1 w-100 mt-2 d-flex justify-content-between">
-                    <div class="d-flex gap-1">
-                        <img style="height: calc(45px * 65 / 100); width: auto;"
-                            src="https://profile.line-scdn.net/0hvnY5-1znKUF0TAAjJORXPgQcKitXPXBTX3hgIUVLdiMadT1ECn1lIUdMcnEafWxEC39mJhNLJSR4X14nahrVdXN8dHBIeGwXUC5gow"
-                            alt="">
-                        <p class="h6 my-auto">Frame</p>
-                    </div>
-                    <p class="h6 my-auto" id="verify">ยืนยันตัวแล้ว</p>
-                </div>
-                <div class="px-1 mt-2">
-                    <p class="fs-6 fw-normal line-clamp">หาคนมาสร้างบ้านให้หมาครับ หน้าฝนแล้วหมาไม่มีที่อยู่ ครับฟู่</p>
-                </div>
-                <div class="px-1 d-flex gap-1">
-                    <p class="h5">ราคา</p>
-                    <p class="h5" id="price">100</p>
-                    <p class="h5">บาท</p>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3 px-2 mt-2">
-                <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
-                <div class="px-1 w-100 mt-2 d-flex justify-content-between">
-                    <div class="d-flex gap-1">
-                        <img style="height: calc(45px * 65 / 100); width: auto;"
-                            src="https://profile.line-scdn.net/0hvnY5-1znKUF0TAAjJORXPgQcKitXPXBTX3hgIUVLdiMadT1ECn1lIUdMcnEafWxEC39mJhNLJSR4X14nahrVdXN8dHBIeGwXUC5gow"
-                            alt="">
-                        <p class="h6 my-auto">Frame</p>
-                    </div>
-                    <p class="h6 my-auto" id="unverify">ยังไม่ยืนยันตัว</p>
-                </div>
-                <div class="px-1 mt-2">
-                    <p class="fs-6 fw-normal line-clamp">รับทำความสะอาดบ้าน ปัดกวาด เช็ดถู</p>
-                </div>
-                <div class="px-1 d-flex gap-1">
-                    <p class="h5">ราคา</p>
-                    <p class="h5" id="price">200</p>
-                    <p class="h5">บาท</p>
-                </div>
-            </div>
+            <?php
+            // SQL คำสั่งในการดึงข้อมูลที่ status_id เท่ากับ 1
+            $sql = "
+            SELECT lakhok_jobs.*, lakhok_mushroom.profile_image, lakhok_mushroom.fname , lakhok_mushroom.verify 
+            FROM lakhok_jobs
+            INNER JOIN lakhok_mushroom ON lakhok_jobs.employer_id = lakhok_mushroom.id 
+            WHERE lakhok_jobs.status_id = 1";
+            $result = $conn->query($sql);
 
-            <div class="col-6 col-lg-3 px-2 mt-2">
-                <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
-                <div class="px-1 w-100 mt-2 d-flex justify-content-between">
-                    <div class="d-flex gap-1">
-                        <img style="height: calc(45px * 65 / 100); width: auto;"
-                            src="https://profile.line-scdn.net/0hvnY5-1znKUF0TAAjJORXPgQcKitXPXBTX3hgIUVLdiMadT1ECn1lIUdMcnEafWxEC39mJhNLJSR4X14nahrVdXN8dHBIeGwXUC5gow"
-                            alt="">
-                        <p class="h6 my-auto">Frame</p>
-                    </div>
-                    <p class="h6 my-auto" id="unverify">ยังไม่ยืนยันตัว</p>
-                </div>
-                <div class="px-1 mt-2">
-                    <p class="fs-6 fw-normal line-clamp">ซ่อมแซมอุปกรณ์ในบ้าน เปลี่ยนหลอดไฟ ประตูหน้าต่าง</p>
-                </div>
-                <div class="px-1 d-flex gap-1">
-                    <p class="h5">ราคา</p>
-                    <p class="h5" id="price">150</p>
-                    <p class="h5">บาท</p>
-                </div>
-            </div>
+            // ตรวจสอบและแสดงผลข้อมูล
+            if ($result->num_rows > 0) {
+                // วนลูปเพื่อแสดงผลข้อมูลแต่ละแถว
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="col-6 col-lg-3 px-2 mt-2">';
+                    echo '    <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">';
+                    echo '    <div class="px-1 w-100 mt-2 d-flex justify-content-between">';
+                    echo '        <div class="d-flex gap-1">';
+                    echo '            <img style="height: calc(45px * 65 / 100); width: auto;" src="' . $row["profile_image"] . '" alt="">';
+                    echo '            <p class="h6 my-auto">' . $row["fname"] . '</p>';
+                    echo '        </div>';
+                    echo '        <p class="h6 my-auto" id="'. ($row["verify"] ? "verify" : "unverify") .'">' . ($row["verify"] ? "ยืนยันแล้ว" : "ยังไม่ยืนยันตัว") . '</p>'; // ตรวจสอบการยืนยัน
+                    echo '    </div>';
+                    echo '    <div class="px-1 mt-2">';
+                    echo '        <p class="fs-6 fw-normal line-clamp">' . $row["title"] . '</p>'; // แสดงชื่อของงาน
+                    echo '    </div>';
+                    echo '    <div class="px-1 d-flex gap-1">';
+                    echo '        <p class="h5">ราคา</p>';
+                    echo '        <p class="h5" id="price">' . $row["price"] . '</p>';
+                    echo '        <p class="h5">บาท</p>';
+                    echo '    </div>';
+                    echo '</div>';
+                }
+            } else {
+                echo "ไม่มีข้อมูลที่ตรงกับเงื่อนไข";
+            }
 
-            <div class="col-6 col-lg-3 px-2 mt-2">
-                <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
-                <div class="px-1 w-100 mt-2 d-flex justify-content-between">
-                    <div class="d-flex gap-1">
-                        <img style="height: calc(45px * 65 / 100); width: auto;"
-                            src="https://profile.line-scdn.net/0hvnY5-1znKUF0TAAjJORXPgQcKitXPXBTX3hgIUVLdiMadT1ECn1lIUdMcnEafWxEC39mJhNLJSR4X14nahrVdXN8dHBIeGwXUC5gow"
-                            alt="">
-                        <p class="h6 my-auto">Frame</p>
-                    </div>
-                    <p class="h6 my-auto" id="verify">ยืนยันตัวแล้ว</p>
-                </div>
-                <div class="px-1 mt-2">
-                    <p class="fs-6 fw-normal line-clamp">บริการพาสุนัขเดินเล่น ปล่อยพลังงาน และดูแลในขณะเจ้าของไม่อยู่
-                    </p>
-                </div>
-                <div class="px-1 d-flex gap-1">
-                    <p class="h5">ราคา</p>
-                    <p class="h5" id="price">300</p>
-                    <p class="h5">บาท</p>
-                </div>
-            </div>
-
-            <div class="col-6 col-lg-3 px-2 mt-2">
-                <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
-                <div class="px-1 w-100 mt-2 d-flex justify-content-between">
-                    <div class="d-flex gap-1">
-                        <img style="height: calc(45px * 65 / 100); width: auto;"
-                            src="https://profile.line-scdn.net/0hvnY5-1znKUF0TAAjJORXPgQcKitXPXBTX3hgIUVLdiMadT1ECn1lIUdMcnEafWxEC39mJhNLJSR4X14nahrVdXN8dHBIeGwXUC5gow"
-                            alt="">
-                        <p class="h6 my-auto">Frame</p>
-                    </div>
-                    <p class="h6 my-auto" id="verify">ยืนยันตัวแล้ว</p>
-                </div>
-                <div class="px-1 mt-2">
-                    <p class="fs-6 fw-normal line-clamp">ให้คำปรึกษาด้านการตกแต่งบ้านและออกแบบภายใน</p>
-                </div>
-                <div class="px-1 d-flex gap-1">
-                    <p class="h5">ราคา</p>
-                    <p class="h5" id="price">500</p>
-                    <p class="h5">บาท</p>
-                </div>
-            </div>
-
-            <div class="col-6 col-lg-3 px-2 mt-2">
-                <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
-                <div class="px-1 w-100 mt-2 d-flex justify-content-between">
-                    <div class="d-flex gap-1">
-                        <img style="height: calc(45px * 65 / 100); width: auto;"
-                            src="https://profile.line-scdn.net/0hvnY5-1znKUF0TAAjJORXPgQcKitXPXBTX3hgIUVLdiMadT1ECn1lIUdMcnEafWxEC39mJhNLJSR4X14nahrVdXN8dHBIeGwXUC5gow"
-                            alt="">
-                        <p class="h6 my-auto">Frame</p>
-                    </div>
-                    <p class="h6 my-auto" id="verify">ยืนยันตัวแล้ว</p>
-                </div>
-                <div class="px-1 mt-2">
-                    <p class="fs-6 fw-normal line-clamp">ให้บริการทำอาหารมื้อพิเศษตามความต้องการของลูกค้า Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eius dignissimos quis facere dolore quia labore nesciunt magni error ducimus odio sequi, inventore cum facilis alias earum natus cumque eveniet quasi?</p>
-                </div>
-                <div class="px-1 d-flex gap-1">
-                    <p class="h5">ราคา</p>
-                    <p class="h5" id="price">700</p>
-                    <p class="h5">บาท</p>
-                </div>
-            </div>
+            // ปิดการเชื่อมต่อ
+            $conn->close();
+            ?>
         </div>
 
         <div class="mb-3"></div>
     </div>
 
-    
+
 
 </body>
 

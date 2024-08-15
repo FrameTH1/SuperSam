@@ -66,8 +66,8 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 <div class="m-auto">
                     <!-- pc -->
                     <div class="m-auto gap-2 d-none d-lg-flex">
-                        <p class="h1 text-white">ค้นหางาน</p>
-                        <p class="h1 text-neon-green">ที่ใช่</p>
+                        <p class="h1 text-white">จ้างงาน</p>
+                        <p class="h1 text-neon-green">ปลอดภัย</p>
                         <p class="h1 text-white">ได้ใน</p>
                         <p class="h1 text-neon-green">ทันท่วงที</p>
                     </div>
@@ -88,51 +88,6 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#1</p>
-                    <p class="h5 text-center">ล้างจาน</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#2</p>
-                    <p class="h5 text-center">ทำความสะอาด</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#3</p>
-                    <p class="h5 text-center">ซ่อมสิ่งของ</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#4</p>
-                    <p class="h5 text-center">ดูเเลเด็ก</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#5</p>
-                    <p class="h5 text-center">งานทั่วไป</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#6</p>
-                    <p class="h5 text-center">งานทั่วไป 2</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#7</p>
-                    <p class="h5 text-center">งานทั่วไป 3</p>
                 </div>
             </div>
         </div>
