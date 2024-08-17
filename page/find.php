@@ -47,6 +47,16 @@ include "../action/database.php"
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    @media (max-width: 767px) {
+        .text-limit {
+            display: inline-block;
+            width: 6ch;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
 </style>
 
 <head>
@@ -155,24 +165,20 @@ include "../action/database.php"
                     echo '    <div class="px-1 w-100 mt-2 d-flex justify-content-between">';
                     echo '        <div class="d-flex gap-1">';
                     echo '            <img style="height: calc(45px * 65 / 100); width: auto;" src="' . $row["profile_image"] . '" alt="">';
-                    echo '            <p class="h6 my-auto">' . $row["fname"] . '</p>';
+                    echo '            <p class="h6 my-auto text-limit">' . $row["fname"] . '</p>';
                     echo '        </div>';
-                    echo '        <p class="h6 my-auto" id="'. ($row["verify"] ? "verify" : "unverify") .'">' . ($row["verify"] ? "ยืนยันแล้ว" : "ยังไม่ยืนยันตัว") . '</p>'; // ตรวจสอบการยืนยัน
+                    echo '        <p class="h6 my-auto" id="' . ($row["verify"] ? "verify" : "unverify") . '">' . ($row["verify"] ? "ยืนยันแล้ว" : "ยังไม่ยืนยันตัว") . '</p>'; // ตรวจสอบการยืนยัน
                     echo '    </div>';
                     echo '    <div class="px-1 mt-2">';
                     echo '        <p class="fs-6 fw-normal line-clamp">' . $row["title"] . '</p>'; // แสดงชื่อของงาน
                     echo '    </div>';
-                    echo '    <div class="px-1 d-flex gap-1">';
-                    echo '        <p class="h5">ราคา</p>';
-                    echo '        <p class="h5" id="price">' . $row["price"] . '</p>';
-                    echo '        <p class="h5">บาท</p>';
+                    echo '    <div class="px-1 d-flex">';
+                    echo '        <p class="h5" id="price">ราคา ' . $row["price"] . ' บาท</p>';
                     echo '    </div>';
                     echo '</div>';
                 }
-            } else {
-                echo "ไม่มีข้อมูลที่ตรงกับเงื่อนไข";
-            }
-
+            } 
+            
             // ปิดการเชื่อมต่อ
             $conn->close();
             ?>

@@ -28,9 +28,18 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
         width: calc(55px - 5px);
         height: calc(55px - (5px * 2));
         margin: auto 5px;
-        background-color: #126f43;
+        background-color: #119356;
         color: white;
         border-radius: 5px;
+    }
+
+    .btn-color {
+        background-color: #119356;
+        color: white;
+    }
+
+    .btn-color:hover {
+        color: white;
     }
 
     #verify {
@@ -62,33 +71,40 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
             <img class="w-100 h-auto"
                 src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/generic_asset/asset/678686c47c024e18e773c75e90aaab1c-1705999902357/hero-xl.png"
                 alt="" srcset="">
-            <div class="d-flex position-absolute w-100 h-100">
-                <div class="m-auto">
-                    <!-- pc -->
-                    <div class="m-auto gap-2 d-none d-lg-flex">
-                        <p class="h1 text-white">จ้างงาน</p>
-                        <p class="h1 text-neon-green">ปลอดภัย</p>
-                        <p class="h1 text-white">ได้ใน</p>
-                        <p class="h1 text-neon-green">ทันท่วงที</p>
-                    </div>
-                    <!-- mobile -->
-                    <div class="m-auto gap-2 d-flex d-lg-none">
-                        <p class="h4 text-white">ค้นหางาน</p>
-                        <p class="h4 text-neon-green">ที่ใช่</p>
-                        <p class="h4 text-white">ได้ใน</p>
-                        <p class="h4 text-neon-green">ทันท่วงที</p>
-                    </div>
-                    <div class="mt-2 d-flex flex-row-reverse">
-                        <input class="w-100 search-anything" type="text" placeholder="พิมพ์คำค้นหา">
-                        <div class="d-flex search-anything position-absolute">
-                            <div class="btn-search-anything d-flex">
-                                <span class="material-symbols-outlined m-auto">
-                                    search
-                                </span>
+        </div>
+
+        <div class="row mt-3 d-flex flex-row-reverse">
+            <div class="col-3 d-flex ps-2">
+                <div class="d-flex w-100">
+                    <div class="m-auto w-100">
+                        <div class="d-flex flex-row-reverse">
+                            <input class="w-100 search-anything" type="text" placeholder="พิมพ์คำค้นหา">
+                            <div class="d-flex search-anything position-absolute">
+                                <div class="btn-search-anything d-flex">
+                                    <span class="material-symbols-outlined m-auto">
+                                        search
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col justify-content-between d-flex flex-row-reverse pe-0">
+                <div class="dropdown my-auto">
+                    <button class="btn btn-color dropdown-toggle search-anything" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        เลือกโหมด
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="#">รอดำเนินการ</a></li>
+                        <li><a class="dropdown-item" href="#">กำลังดำเนินการ</a></li>
+                        <li><a class="dropdown-item" href="#">ดำเนินการเสร็จสิ้น</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-color search-anything" type="button">
+                        สร้างการจ้างงาน
+                </button>
             </div>
         </div>
 
