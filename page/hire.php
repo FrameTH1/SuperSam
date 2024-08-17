@@ -74,7 +74,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
         </div>
 
         <div class="row mt-3 d-flex flex-row-reverse">
-            <div class="col-3 d-flex ps-2">
+            <div class="col-3 d-flex ps-2 d-none d-md-flex">
                 <div class="d-flex w-100">
                     <div class="m-auto w-100">
                         <div class="d-flex flex-row-reverse">
@@ -90,7 +90,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     </div>
                 </div>
             </div>
-            <div class="col justify-content-between d-flex flex-row-reverse pe-0">
+            <div class="col justify-content-between d-flex flex-row-reverse pe-lg-0">
                 <div class="dropdown my-auto">
                     <button class="btn btn-color dropdown-toggle search-anything" type="button" id="dropdownMenuButton"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -108,7 +108,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
             </div>
         </div>
 
-        <div class="row mt-3">
+        <div class="row mt-2">
             <div class="col-6 col-lg-3 px-2 mt-2">
                 <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
                 <div class="px-1 w-100 mt-2 d-flex justify-content-between">

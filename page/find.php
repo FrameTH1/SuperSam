@@ -146,7 +146,7 @@ include "../action/database.php"
             </div>
         </div>
 
-        <div class="row mt-3">
+        <div class="row mt-2">
             <?php
             // SQL คำสั่งในการดึงข้อมูลที่ status_id เท่ากับ 1
             $sql = "
@@ -178,7 +178,7 @@ include "../action/database.php"
                     echo '</div>';
                 }
             } 
-            
+
             // ปิดการเชื่อมต่อ
             $conn->close();
             ?>
