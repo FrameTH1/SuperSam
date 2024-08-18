@@ -24,6 +24,12 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
         border-radius: 5px;
     }
 
+    @media (max-width: 768px) {
+        .search-anything {
+            height: 45px;
+        }
+    }
+
     .btn-search-anything {
         width: calc(55px - 5px);
         height: calc(55px - (5px * 2));
@@ -103,7 +109,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     </ul>
                 </div>
                 <button class="btn btn-color search-anything" type="button">
-                        สร้างการจ้างงาน
+                    สร้างการจ้างงาน
                 </button>
             </div>
         </div>

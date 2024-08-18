@@ -27,12 +27,21 @@ include "../action/database.php"
         border-radius: 5px;
     }
 
+    input {
+        border-color: transparent;
+    }
+
+    input:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
     #verify {
         padding: 4px 6px;
         background-color: #1dbf72;
         border-radius: 25px;
     }
-
+        
     #unverify {
         padding: 4px 6px;
         background-color: #FFD700;
@@ -87,61 +96,21 @@ include "../action/database.php"
                         <p class="h4 text-white">ได้ใน</p>
                         <p class="h4 text-neon-green">ทันท่วงที</p>
                     </div>
-                    <div class="mt-2 d-flex flex-row-reverse">
-                        <input class="w-100 search-anything" type="text" placeholder="พิมพ์คำค้นหา">
-                        <div class="d-flex search-anything position-absolute">
-                            <div class="btn-search-anything d-flex">
+                    <div class="mt-2 d-flex bg-white rounded-2">
+                        <input class="w-100 me-1 search-anything fs-5" type="text" placeholder="พิมพ์คำค้นหา">
+                        <div class="d-flex search-anything">
+                            <div class="btn-search-anything d-flex ms-0">
                                 <span class="material-symbols-outlined m-auto">
                                     search
                                 </span>
                             </div>
+                            <div class="btn-search-anything d-flex ms-0">
+                                <span class="material-symbols-outlined m-auto">
+                                    settings
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#1</p>
-                    <p class="h5 text-center">ล้างจาน</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#2</p>
-                    <p class="h5 text-center">ทำความสะอาด</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#3</p>
-                    <p class="h5 text-center">ซ่อมสิ่งของ</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#4</p>
-                    <p class="h5 text-center">ดูเเลเด็ก</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#5</p>
-                    <p class="h5 text-center">งานทั่วไป</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#6</p>
-                    <p class="h5 text-center">งานทั่วไป 2</p>
-                </div>
-            </div>
-            <div class="col d-flex shadow m-2">
-                <div class="m-auto d-flex flex-column align-items-center p-2">
-                    <p class="h4 text-center">#7</p>
-                    <p class="h5 text-center">งานทั่วไป 3</p>
                 </div>
             </div>
         </div>
@@ -177,7 +146,7 @@ include "../action/database.php"
                     echo '    </div>';
                     echo '</div>';
                 }
-            } 
+            }
 
             // ปิดการเชื่อมต่อ
             $conn->close();
