@@ -27,6 +27,10 @@ include "../action/database.php"
         border-radius: 5px;
     }
 
+    .bg-color-search {
+        background-color: #126f43;
+    }
+
     input {
         border-color: transparent;
     }
@@ -40,12 +44,28 @@ include "../action/database.php"
         padding: 4px 6px;
         background-color: #1dbf72;
         border-radius: 25px;
+        white-space: nowrap;
+        /* ไม่ให้ข้อความขึ้นบรรทัดใหม่ */
+        overflow: hidden;
+        /* ซ่อนข้อความที่ยาวเกิน */
+        text-overflow: ellipsis;
+        /* เพิ่มจุดไข่ปลา (...) */
+        max-width: 100%;
+        /* กำหนดความกว้างสูงสุด */
     }
-        
+
     #unverify {
         padding: 4px 6px;
         background-color: #FFD700;
         border-radius: 25px;
+        white-space: nowrap;
+        /* ไม่ให้ข้อความขึ้นบรรทัดใหม่ */
+        overflow: hidden;
+        /* ซ่อนข้อความที่ยาวเกิน */
+        text-overflow: ellipsis;
+        /* เพิ่มจุดไข่ปลา (...) */
+        max-width: 100%;
+        /* กำหนดความกว้างสูงสุด */
     }
 
     .line-clamp {
@@ -81,7 +101,7 @@ include "../action/database.php"
                 src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/generic_asset/asset/678686c47c024e18e773c75e90aaab1c-1705999902357/hero-xl.png"
                 alt="" srcset="">
             <div class="d-flex position-absolute w-100 h-100">
-                <div class="m-auto">
+                <div class="m-auto d-flex flex-column">
                     <!-- pc -->
                     <div class="m-auto gap-2 d-none d-lg-flex">
                         <p class="h1 text-white">ค้นหางาน</p>
@@ -104,7 +124,8 @@ include "../action/database.php"
                                     search
                                 </span>
                             </div>
-                            <div class="btn-search-anything d-flex ms-0">
+                            <div class="btn-search-anything d-flex ms-0" data-bs-toggle="modal"
+                                data-bs-target="#settingsModal">
                                 <span class="material-symbols-outlined m-auto">
                                     settings
                                 </span>
@@ -115,43 +136,108 @@ include "../action/database.php"
             </div>
         </div>
 
-        <div class="row mt-2">
-            <?php
-            // SQL คำสั่งในการดึงข้อมูลที่ status_id เท่ากับ 1
-            $sql = "
-            SELECT lakhok_jobs.*, lakhok_mushroom.profile_image, lakhok_mushroom.fname , lakhok_mushroom.verify 
-            FROM lakhok_jobs
-            INNER JOIN lakhok_mushroom ON lakhok_jobs.employer_id = lakhok_mushroom.id 
-            WHERE lakhok_jobs.status_id = 1";
-            $result = $conn->query($sql);
+        <div id="results" class="row mt-2"></div>
 
-            // ตรวจสอบและแสดงผลข้อมูล
-            if ($result->num_rows > 0) {
-                // วนลูปเพื่อแสดงผลข้อมูลแต่ละแถว
-                while ($row = $result->fetch_assoc()) {
-                    echo '<div class="col-6 col-lg-3 px-2 mt-2">';
-                    echo '    <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">';
-                    echo '    <div class="px-1 w-100 mt-2 d-flex justify-content-between">';
-                    echo '        <div class="d-flex gap-1">';
-                    echo '            <img style="height: calc(45px * 65 / 100); width: auto;" src="' . $row["profile_image"] . '" alt="">';
-                    echo '            <p class="h6 my-auto text-limit">' . $row["fname"] . '</p>';
-                    echo '        </div>';
-                    echo '        <p class="h6 my-auto" id="' . ($row["verify"] ? "verify" : "unverify") . '">' . ($row["verify"] ? "ยืนยันแล้ว" : "ยังไม่ยืนยันตัว") . '</p>'; // ตรวจสอบการยืนยัน
-                    echo '    </div>';
-                    echo '    <div class="px-1 mt-2">';
-                    echo '        <p class="fs-6 fw-normal line-clamp">' . $row["title"] . '</p>'; // แสดงชื่อของงาน
-                    echo '    </div>';
-                    echo '    <div class="px-1 d-flex">';
-                    echo '        <p class="h5" id="price">ราคา ' . $row["price"] . ' บาท</p>';
-                    echo '    </div>';
-                    echo '</div>';
-                }
+        <script>
+            // ฟังก์ชันดึงข้อมูลจาก get_find.php
+            function fetchfillter(verify) {
+                fetch('action/get_find.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'verify': verify
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsDiv = document.getElementById('results');
+                        resultsDiv.innerHTML = ''; // ล้างข้อมูลเก่าออก
+
+                        // วนลูปแสดงผลข้อมูล
+                        data.forEach(row => {
+                            const content = `
+                                <div class="col-6 col-lg-3 px-2 mt-2">
+                                    <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
+                                    <div class="px-1 w-100 mt-2 d-flex justify-content-between">
+                                        <div class="d-flex gap-1">
+                                            <img style="height: calc(45px * 65 / 100); width: auto;" src="${row.profile_image}" alt="">
+                                            <p class="h6 my-auto text-limit">${row.fname}</p>
+                                        </div>
+                                        <p class="h6 my-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
+                                    </div>
+                                    <div class="px-1 mt-2">
+                                        <p class="fs-6 fw-normal line-clamp">${row.title}</p>
+                                    </div>
+                                    <div class="px-1 d-flex">
+                                        <p class="h5" id="price">ราคา ${row.price} บาท</p>
+                                    </div>
+                                </div>
+                            `;
+                            resultsDiv.innerHTML += content;
+                        });
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
             }
 
-            // ปิดการเชื่อมต่อ
-            $conn->close();
-            ?>
+            // เรียกใช้ฟังก์ชัน fetchData โดยส่งค่า verify ตามที่ต้องการ
+            fetchfillter(2); // หรือสำหรับการกรองที่ยืนยันแล้ว
+        </script>
+
+        <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="settingsModalLabel">กรองการค้นหา</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="h5 text-center">การยืนยันตัวตน</p>
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle w-100" type="button"
+                                id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                ได้ทั้งสอง
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                <!-- ฟอร์มส่งค่า verify = 2 -->
+                                <li>
+                                    <input type="hidden" name="verify" value="2">
+                                    <button class="dropdown-item text-center"
+                                        onclick="updateButtonText(this, 2);fetchfillter(2)">ได้ทั้งสอง</button>
+                                </li>
+                                <!-- ฟอร์มส่งค่า verify = 1 -->
+                                <li>
+                                    <input type="hidden" name="verify" value="1">
+                                    <button class="dropdown-item text-center"
+                                        onclick="updateButtonText(this, 1);fetchfillter(1)">ยืนยันแล้ว</button>
+                                </li>
+                                <!-- ฟอร์มส่งค่า verify = 0 -->
+                                <li>
+                                    <input type="hidden" name="verify" value="0">
+                                    <button class="dropdown-item text-center"
+                                        onclick="updateButtonText(this, 0);fetchfillter(0)">ยังไม่ยืนยัน</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ปิด</button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <script>
+            let selectedVerifyStatus = 2; // Default to "ยังไม่ยืนยัน"
+
+            function updateButtonText(element, value) {
+                document.getElementById('dropdownMenuButton').innerText = element.innerText;
+                selectedVerifyStatus = value;
+            }
+        </script>
 
         <div class="mb-3"></div>
     </div>
