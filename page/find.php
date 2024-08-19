@@ -13,6 +13,10 @@ include "../action/database.php"
         color: #1dbf72;
     }
 
+    .text-dark-green {
+        color: #126f43;
+    }
+
     .search-anything {
         height: 55px;
         border-radius: 5px;
@@ -29,6 +33,19 @@ include "../action/database.php"
 
     .bg-color-search {
         background-color: #126f43;
+    }
+
+    .image-cover {
+        min-height: 225px;
+    }   
+
+    .image-cover img {
+        object-fit: cover;
+    }   
+
+    .btn-find {
+        color: #126f43;
+        background-color: white;
     }
 
     input {
@@ -96,7 +113,7 @@ include "../action/database.php"
 <body>
     <?php require 'assets/navbar.php' ?>
     <div class="container">
-        <div class="mt-4 d-flex position-relative">
+        <div class="mt-4 d-flex position-relative image-cover">
             <img class="w-100 h-auto"
                 src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/generic_asset/asset/678686c47c024e18e773c75e90aaab1c-1705999902357/hero-xl.png"
                 alt="" srcset="">
@@ -126,6 +143,12 @@ include "../action/database.php"
                                 </span>
                             </div>
                         </div>
+                    </div>
+                    <div class="d-flex mt-3 gap-2 justify-content-center">
+                        <p class="h5 text-white my-auto text-center">หรือต้องการ</p>
+                        <button class="btn btn-find my-auto ms-1 me-0" type="button">
+                            ประกาศหางาน
+                        </button>
                     </div>
                 </div>
             </div>

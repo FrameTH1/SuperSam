@@ -44,6 +44,8 @@
             $('#content').load('page/find.php');
         } else if (page === 'hire') {
             $('#content').load('page/hire.php');
+        }else if (page === 'history') {
+            $('#content').load('page/history.php');
         } else {
             $('#content').load('page/find.php');
         }

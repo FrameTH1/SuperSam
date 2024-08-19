@@ -22,6 +22,7 @@
                                         </button>
                                         <ul class='dropdown-menu' aria-labelledby='dropdownMenuButtonProfile'>
                                             <li><a class='dropdown-item cursor-pointer' onclick='goto(".'"profile"'.");'>บัญชีของฉัน</a></li>
+                                            <li><a class='dropdown-item cursor-pointer' onclick='goto(".'"history"'.");'>ประวัติของฉัน</a></li>
                                             <li><a class='dropdown-item cursor-pointer' onclick='goto(".'"logout"'.");'>ออกจากระบบ</a></li>
                                         </ul>
                                     </div>";
