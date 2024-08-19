@@ -109,6 +109,11 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
             text-overflow: ellipsis;
         }
     }
+
+    .img {
+        height: 200px;
+        object-fit: cover;
+    }
 </style>
 
 <body>
@@ -192,15 +197,25 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
 
                         // แสดงผลข้อมูลที่ค้นหา
                         data.forEach(row => {
+                            <?php
+                            $rating = $row['rating']; // ค่าคะแนนเฉลี่ยจากฐานข้อมูล
+                            $max_rating = 5.0000; // ค่าคะแนนสูงสุด
+                            $percentage = ($rating / $max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
+                            ?>
                             const content = `
                                 <div class="col-6 col-lg-3 px-2 mt-2">
-                                    <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
+                                    <img class="w-100 img rounded-3" src="${row.img}" alt="">
                                     <div class="px-1 w-100 mt-2 d-flex justify-content-between">
                                         <div class="d-flex gap-1">
                                             <img style="height: calc(45px * 65 / 100); width: auto;" src="${row.profile_image}" alt="">
                                             <p class="h6 my-auto text-limit">${row.fname}</p>
                                         </div>
                                         <p class="h6 my-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
+                                    </div>
+                                    <div class="px-1 mt-2">
+                                        <div class="progress-bar" role="progressbar" style="width: <?php echo $percentage; ?>%;" aria-valuenow="<?php echo $rating; ?>" aria-valuemin="0" aria-valuemax="5">
+                                            <?php echo $rating; ?> จาก 5
+                                        </div>
                                     </div>
                                     <div class="px-1 mt-2">
                                         <p class="fs-6 fw-normal line-clamp">${row.title}</p>
