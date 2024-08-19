@@ -4,11 +4,8 @@
 <div class="container mt-3">
     <div class="d-flex justify-content-between" id="navbar">
         <ul class="ms-3 d-flex list-unstyled gap-4 my-auto">
-            <a href="?page=hire">
-                <li class="h5 py-2 cursor-pointer" role="button">จ้างงาน</li>
-            </a>
-            <a href="?page=find">
-                <li class="h5 py-2 cursor-pointer" role="button">หางาน</li>
+            <a>
+                <li class="h5 py-2 cursor-pointer" role="button">ศูนย์รวมอาชีพหลักหก</li>
             </a>
         </ul>
         <ul class="me-3 d-flex list-unstyled gap-1 my-auto">
