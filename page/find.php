@@ -119,14 +119,9 @@ include "../action/database.php"
                     <div class="mt-2 d-flex bg-white rounded-2">
                         <input class="w-100 me-1 search-anything fs-5" type="text" placeholder="พิมพ์คำค้นหา">
                         <div class="d-flex search-anything">
-                            <div class="btn-search-anything d-flex ms-0">
-                                <span class="material-symbols-outlined m-auto">
-                                    search
-                                </span>
-                            </div>
                             <div class="btn-search-anything d-flex ms-0" data-bs-toggle="modal"
                                 data-bs-target="#settingsModal">
-                                <span class="material-symbols-outlined m-auto">
+                                <span class="material-symbols-outlined m-auto" onclick="search()">
                                     settings
                                 </span>
                             </div>
@@ -136,17 +131,33 @@ include "../action/database.php"
             </div>
         </div>
 
-        <div id="results" class="row mt-2"></div>
-
         <script>
-            // ฟังก์ชันดึงข้อมูลจาก get_find.php
-            function fetchfillter(verify) {
+
+            function updateButtonText(element, value) {
+                document.getElementById('dropdownMenuButton').innerText = element.innerText;
+                localStorage.setItem('verify', value);
+            }
+
+            // ฟังก์ชันที่เรียกใช้เมื่อกดปุ่ม Enter
+            function handleEnterKey(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // ป้องกันการส่งฟอร์ม
+                    search(); // เรียกใช้ฟังก์ชันค้นหา
+                }
+            }
+
+            // ฟังก์ชันค้นหาข้อมูล
+            function search() {
+                var searchQuery = document.querySelector('.search-anything').value;
+                var verify = localStorage.getItem('verify');
+
                 fetch('action/get_find.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: new URLSearchParams({
+                        'search': searchQuery,
                         'verify': verify
                     })
                 })
@@ -155,7 +166,7 @@ include "../action/database.php"
                         const resultsDiv = document.getElementById('results');
                         resultsDiv.innerHTML = ''; // ล้างข้อมูลเก่าออก
 
-                        // วนลูปแสดงผลข้อมูล
+                        // แสดงผลข้อมูลที่ค้นหา
                         data.forEach(row => {
                             const content = `
                                 <div class="col-6 col-lg-3 px-2 mt-2">
@@ -181,9 +192,14 @@ include "../action/database.php"
                     .catch(error => console.error('Error fetching data:', error));
             }
 
-            // เรียกใช้ฟังก์ชัน fetchData โดยส่งค่า verify ตามที่ต้องการ
-            fetchfillter(2); // หรือสำหรับการกรองที่ยืนยันแล้ว
+            search()
+
+            // เพิ่ม event listener ให้ฟิลด์ค้นหา
+            document.querySelector('.search-anything').addEventListener('keydown', handleEnterKey);
         </script>
+
+        <div id="results" class="row mt-2"></div>
+
 
         <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
             aria-hidden="true">
@@ -204,40 +220,31 @@ include "../action/database.php"
                             <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
                                 <!-- ฟอร์มส่งค่า verify = 2 -->
                                 <li>
-                                    <input type="hidden" name="verify" value="2">
+                                    <input type="hidden" id="verifyValue" name="verify" value="2">
                                     <button class="dropdown-item text-center"
-                                        onclick="updateButtonText(this, 2);fetchfillter(2)">ได้ทั้งสอง</button>
+                                        onclick="updateButtonText(this, 2);">ได้ทั้งสอง</button>
                                 </li>
                                 <!-- ฟอร์มส่งค่า verify = 1 -->
                                 <li>
-                                    <input type="hidden" name="verify" value="1">
+                                    <input type="hidden" id="verifyValue" name="verify" value="1">
                                     <button class="dropdown-item text-center"
-                                        onclick="updateButtonText(this, 1);fetchfillter(1)">ยืนยันแล้ว</button>
+                                        onclick="updateButtonText(this, 1);">ยืนยันแล้ว</button>
                                 </li>
                                 <!-- ฟอร์มส่งค่า verify = 0 -->
                                 <li>
-                                    <input type="hidden" name="verify" value="0">
+                                    <input type="hidden" id="verifyValue" name="verify" value="0">
                                     <button class="dropdown-item text-center"
-                                        onclick="updateButtonText(this, 0);fetchfillter(0)">ยังไม่ยืนยัน</button>
+                                        onclick="updateButtonText(this, 0);">ยังไม่ยืนยัน</button>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ปิด</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">ยืนยัน</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <script>
-            let selectedVerifyStatus = 2; // Default to "ยังไม่ยืนยัน"
-
-            function updateButtonText(element, value) {
-                document.getElementById('dropdownMenuButton').innerText = element.innerText;
-                selectedVerifyStatus = value;
-            }
-        </script>
 
         <div class="mb-3"></div>
     </div>
