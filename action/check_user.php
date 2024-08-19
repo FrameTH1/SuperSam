@@ -23,6 +23,9 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     // ผู้ใช้มีอยู่ในฐานข้อมูล
+    $row = $result->fetch_assoc(); // ดึงข้อมูลแถวแรก
+    $_SESSION["tel"] = $row["tel"]; // ใช้ค่าจากแถวที่ดึงมา
+    $_SESSION["contact"] = $row["contact"]; // ใช้ค่าจากแถวที่ดึงมา
     echo json_encode(['exists' => true]);
 } else {
     // ไม่มีผู้ใช้, เพิ่มเข้าไป
