@@ -122,7 +122,7 @@ include "../action/database.php"
                     <!-- pc -->
                     <div class="m-auto gap-2 d-none d-lg-flex">
                         <p class="h1 text-white">ค้นหางาน</p>
-                        <p class="h1 text-neon-green">งานที่ใช่</p>
+                        <p class="h1 text-neon-green">ที่ใช่</p>
                         <p class="h1 text-white">ได้ใน</p>
                         <p class="h1 text-neon-green">ทันท่วงที</p>
                     </div>
@@ -158,7 +158,7 @@ include "../action/database.php"
 
             function updateButtonText(element, value) {
                 document.getElementById('dropdownMenuButton').innerText = element.innerText;
-                localStorage.setItem('verify', value);
+                localStorage.setItem('find_verify', value);
             }
 
             // ฟังก์ชันที่เรียกใช้เมื่อกดปุ่ม Enter
@@ -172,7 +172,7 @@ include "../action/database.php"
             // ฟังก์ชันค้นหาข้อมูล
             function search() {
                 var searchQuery = document.querySelector('.search-anything').value;
-                var verify = localStorage.getItem('verify');
+                var verify = localStorage.getItem('find_verify');
 
                 fetch('action/get_find.php', {
                     method: 'POST',

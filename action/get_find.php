@@ -15,7 +15,7 @@ if (isset($_POST['verify'])) {
         $sql = "SELECT lakhok_jobs.*, lakhok_mushroom.profile_image, lakhok_mushroom.fname, lakhok_mushroom.verify 
             FROM lakhok_jobs
             INNER JOIN lakhok_mushroom ON lakhok_jobs.employer_id = lakhok_mushroom.id 
-            WHERE lakhok_jobs.status_id = 1
+            WHERE lakhok_jobs.status = 'รอคนหางาน'
             AND lakhok_mushroom.verify = ?
             AND lakhok_jobs.title LIKE ?";
 
@@ -35,12 +35,10 @@ if (isset($_POST['verify'])) {
         echo json_encode($data);
 
     } else {
-        // ดึงข้อมูลทั้งหมดที่ status_id เท่ากับ 1 โดยไม่สนค่า verify
-        $sql = "
-        SELECT lakhok_jobs.*, lakhok_mushroom.profile_image, lakhok_mushroom.fname, lakhok_mushroom.verify 
+        $sql = "SELECT lakhok_jobs.*, lakhok_mushroom.profile_image, lakhok_mushroom.fname, lakhok_mushroom.verify 
         FROM lakhok_jobs
         INNER JOIN lakhok_mushroom ON lakhok_jobs.employer_id = lakhok_mushroom.id 
-        WHERE lakhok_jobs.status_id = 1
+        WHERE lakhok_jobs.status = 'รอคนหางาน'
         AND lakhok_jobs.title LIKE ?";
 
         $stmt = $conn->prepare($sql);

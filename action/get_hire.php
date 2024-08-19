@@ -4,94 +4,60 @@ session_start();
 
 include 'database.php';
 
+// รับคำค้นหาจาก POST
+$searchQuery = isset($_POST['search']) ? '%' . $_POST['search'] . '%' : '%';
 
-// รับค่าพารามิเตอร์ status จาก URL
-$status = isset($_GET['status']) ? $_GET['status'] : '';
+// รับค่า POST
+if (isset($_POST['verify'])) {
 
-$status_map = [
-    'รอดำเนินการ' => 'รอดำเนินการ',
-    'กำลังดำเนินการ' => 'กำลังดำเนินการ',
-    'ดำเนินการเสร็จสิ้น' => 'ดำเนินการเสร็จสิ้น'
-];
-
-if (isset($_SESSION["userId"])) {
-    $user_id = $_SESSION["userId"];
-}else {
-    $user_id = null;
-}
-
-if ($status == 'รอดำเนินการ') {
-    if (array_key_exists($status, $status_map)) {
-        $sql = "SELECT jobs.title, employer.display_name AS employer, jobs.price, jobs.location, jobs.post_date, jobs.due_date, jobs.employee_id 
-                FROM jobs 
-                JOIN users AS employer ON jobs.employer_id = employer.id 
-                JOIN users ON jobs.employer_id = users.id 
-                JOIN job_status ON jobs.status_id = job_status.id 
-                WHERE job_status.status_name =? AND employer.user_id = ?";
+    if ($_POST['verify'] == 0 || $_POST['verify'] == 1) {
+        // เตรียม query พร้อมเงื่อนไข verify
+        $sql = "SELECT lakhok_jobs.*, lakhok_mushroom.profile_image, lakhok_mushroom.fname, lakhok_mushroom.verify 
+            FROM lakhok_jobs
+            INNER JOIN lakhok_mushroom ON lakhok_jobs.employer_id = lakhok_mushroom.id 
+            WHERE lakhok_jobs.status = 'รอคนจ้างงาน'
+            AND lakhok_mushroom.verify = ?
+            AND lakhok_jobs.title LIKE ?";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $status_map[$status],$user_id);
+        $stmt->bind_param("is", $_POST['verify'], $searchQuery);
         $stmt->execute();
         $result = $stmt->get_result();
-
-        $jobs = [];
-        while ($row = $result->fetch_assoc()) {
-            $jobs[] = $row;
+        // ตรวจสอบผลลัพธ์และส่งกลับในรูปแบบ JSON
+        $data = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
         }
+        // ส่งข้อมูลกลับไปที่ frontend ในรูปแบบ JSON
+        header('Content-Type: application/json');
+        echo json_encode($data);
 
-        $stmt->close();
-        echo json_encode($jobs);
     } else {
-        echo json_encode([]);
-    }
-} else if ($status == 'กำลังดำเนินการ') {
-    if (array_key_exists($status, $status_map)) {
-        $sql = "SELECT jobs.title, employer.display_name AS employer, employee.display_name AS employee, jobs.location, jobs.post_date, jobs.due_date 
-            FROM jobs 
-            JOIN users AS employer ON jobs.employer_id = employer.id 
-            JOIN users AS employee ON jobs.employee_id = employee.id 
-            JOIN job_status ON jobs.status_id = job_status.id 
-            WHERE job_status.status_name = ? AND employer.user_id = ?";
+        $sql = "SELECT lakhok_jobs.*, lakhok_mushroom.profile_image, lakhok_mushroom.fname, lakhok_mushroom.verify 
+        FROM lakhok_jobs
+        INNER JOIN lakhok_mushroom ON lakhok_jobs.employer_id = lakhok_mushroom.id 
+        WHERE lakhok_jobs.status = 'รอคนจ้างงาน'
+        AND lakhok_jobs.title LIKE ?";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $status_map[$status], $user_id);
+        $stmt->bind_param("s", $searchQuery);
         $stmt->execute();
         $result = $stmt->get_result();
-
-        $jobs = [];
-        while ($row = $result->fetch_assoc()) {
-            $jobs[] = $row;
+        // ตรวจสอบผลลัพธ์และส่งกลับในรูปแบบ JSON
+        $data = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
         }
-
-        $stmt->close();
-        echo json_encode($jobs);
+        // ส่งข้อมูลกลับไปที่ frontend ในรูปแบบ JSON
+        header('Content-Type: application/json');
+        echo json_encode($data);
     }
-
-} else if ($status == 'ดำเนินการเสร็จสิ้น') {
-    if (array_key_exists($status, $status_map)) {
-        $sql = "SELECT jobs.title, employer.display_name AS employer, employee.display_name AS employee, jobs.location, jobs.post_date, jobs.due_date, jobs.rating
-                FROM jobs 
-                JOIN users AS employer ON jobs.employer_id = employer.id 
-                JOIN users AS employee ON jobs.employee_id = employee.id 
-                JOIN job_status ON jobs.status_id = job_status.id 
-                WHERE job_status.status_name = ? AND employer.user_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $status_map[$status], $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $jobs = [];
-        while ($row = $result->fetch_assoc()) {
-            $jobs[] = $row;
-        }
-
-        $stmt->close();
-        echo json_encode($jobs);
-    }
-
 }
 
-
-
+// ปิดการเชื่อมต่อฐานข้อมูล
 $conn->close();
 ?>
