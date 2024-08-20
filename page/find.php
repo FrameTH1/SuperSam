@@ -166,8 +166,8 @@ session_start();
                     </div>
                     <div class="d-flex mt-3 gap-2 justify-content-center">
                         <p class="h5 text-white my-auto text-center">หรือต้องการ</p>
-                        <button class="btn btn-find my-auto ms-1 me-0" type="button" data-bs-toggle="modal" data-bs-target="#hireModal">
-                            ประกาศจ้างงาน
+                        <button class="btn btn-find my-auto ms-1 me-0" type="button" data-bs-toggle="modal" data-bs-target="#findModal">
+                            ประกาศหางาน
                         </button>
                     </div>
                 </div>
@@ -194,7 +194,7 @@ session_start();
                 var searchQuery = document.querySelector('.search-anything').value;
                 var verify = localStorage.getItem('hire_verify');
 
-                fetch('action/get_hire.php', {
+                fetch('action/get_find.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -303,11 +303,11 @@ session_start();
             </div>
         </div>
 
-        <div class="modal fade" id="hireModal" tabindex="-1" aria-labelledby="hireModalLabel" aria-hidden="true">
+        <div class="modal fade" id="findModal" tabindex="-1" aria-labelledby="findModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="hireModalLabel">ประกาศหางาน</h5>
+                        <h5 class="modal-title" id="findModalLabel">ประกาศหางาน</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
