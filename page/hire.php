@@ -169,7 +169,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     </div>
                     <div class="d-flex mt-3 gap-2 justify-content-center">
                         <p class="h5 text-white my-auto text-center">หรือต้องการ</p>
-                        <button class="btn btn-find my-auto ms-1 me-0" type="button">
+                        <button class="btn btn-find my-auto ms-1 me-0" type="button" data-bs-toggle="modal" data-bs-target="#hireModal">
                             ประกาศจ้างงาน
                         </button>
                     </div>
@@ -230,8 +230,8 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                                             <p class="h6 my-auto">( ${row.rating_count} โหวต )</p>
                                         </div>
                                         <div class="d-flex d-sm-none gap-1">
-                                            <p class="h6 my-auto">`+ (isNaN(parseFloat(rating).toFixed(1)) ? "" : parseFloat(parseFloat(rating).toFixed(1))) +`</p>
-                                            `+ (parseFloat(rating) > 0 ? '<div class="my-auto" id="star">★</div>' : '') +`
+                                            <p class="h6 my-auto">`+ (isNaN(parseFloat(rating).toFixed(1)) ? "" : parseFloat(parseFloat(rating).toFixed(1))) + `</p>
+                                            `+ (parseFloat(rating) > 0 ? '<div class="my-auto" id="star">★</div>' : '') + `
                                         </div>
                                     </div>
                                     <div class="px-1 mt-2">
@@ -301,6 +301,31 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" data-bs-dismiss="modal">ยืนยัน</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="hireModal" tabindex="-1" aria-labelledby="hireModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="hireModalLabel">ประกาศจ้างงาน</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="h5 text-center">แนบรูปภาพ</p>
+                        <input class="form-control" type="file" id="jobImage" accept="image/*">
+                        <p class="h5 mt-2 text-center">รายละเอียดงาน</p>
+                        <textarea class="form-control" id="jobDescription" placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3"></textarea>
+                        <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
+                        <div class="d-flex gap-2">
+                            <input class="form-control" type="text" placeholder="เช่น เริ่มต้น 10, จุดละ 1">
+                            <p class="h5 my-auto">บาท</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success">ส่งประกาศ</button>
                     </div>
                 </div>
             </div>
