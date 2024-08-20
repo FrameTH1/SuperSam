@@ -73,8 +73,6 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
         /* ซ่อนข้อความที่ยาวเกิน */
         text-overflow: ellipsis;
         /* เพิ่มจุดไข่ปลา (...) */
-        max-width: 100%;
-        /* กำหนดความกว้างสูงสุด */
     }
 
     #unverify {
@@ -87,8 +85,6 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
         /* ซ่อนข้อความที่ยาวเกิน */
         text-overflow: ellipsis;
         /* เพิ่มจุดไข่ปลา (...) */
-        max-width: 100%;
-        /* กำหนดความกว้างสูงสุด */
     }
 
     .line-clamp {
@@ -113,6 +109,23 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
     .img {
         height: 200px;
         object-fit: cover;
+    }
+
+    .Stars {
+        --percent: calc(var(--rating) / 5 * 100%);
+
+        display: inline-block;
+        font-family: Times; // make sure ★ appears correctly
+        line-height: 1;
+        margin: auto 0;
+
+        &::before {
+            content: '★★★★★';
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, #fc0 var(--percent), #DADADA var(--percent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     }
 </style>
 
@@ -197,11 +210,9 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
 
                         // แสดงผลข้อมูลที่ค้นหา
                         data.forEach(row => {
-                            <?php
-                            $rating = $row['rating']; // ค่าคะแนนเฉลี่ยจากฐานข้อมูล
-                            $max_rating = 5.0000; // ค่าคะแนนสูงสุด
-                            $percentage = ($rating / $max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
-                            ?>
+                            const rating = row.average_rating; // ค่าคะแนนเฉลี่ยจากฐานข้อมูล
+                            const max_rating = 5.0000; // ค่าคะแนนสูงสุด
+                            const percentage = (rating / max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
                             const content = `
                                 <div class="col-6 col-lg-3 px-2 mt-2">
                                     <img class="w-100 img rounded-3" src="${row.img}" alt="">
@@ -210,11 +221,17 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                                             <img style="height: calc(45px * 65 / 100); width: auto;" src="${row.profile_image}" alt="">
                                             <p class="h6 my-auto text-limit">${row.fname}</p>
                                         </div>
-                                        <p class="h6 my-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
+                                        <div class="d-flex">
+                                            <div class="Stars" style="--rating: ` + rating + `;" aria-label="Rating of this product is 2.3 out of 5."></div>
+                                            <p class="h6 my-auto">( ${row.rating_count} โหวต )</p>
+                                        </div>
                                     </div>
                                     <div class="px-1 mt-2">
-                                        <div class="progress-bar" role="progressbar" style="width: <?php echo $percentage; ?>%;" aria-valuenow="<?php echo $rating; ?>" aria-valuemin="0" aria-valuemax="5">
-                                            <?php echo $rating; ?> จาก 5
+                                        <div class="d-flex gap-2">
+                                            <p class="h5 my-auto">แท็กที่มี</p>
+                                            <div>
+                                                <p class="h6 my-auto w-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="px-1 mt-2">

@@ -15,6 +15,7 @@ if (isset($_POST['verify'])) {
         $sql = "SELECT 
                     lakhok_jobs.employee_id, 
                     AVG(lakhok_jobs.rating) AS average_rating, 
+                    COUNT(lakhok_jobs.rating) AS rating_count, 
                     ANY_VALUE(lakhok_jobs.title) AS title,
                     ANY_VALUE(lakhok_jobs.price) AS price, 
                     ANY_VALUE(lakhok_jobs.img) AS img, 
@@ -47,6 +48,7 @@ if (isset($_POST['verify'])) {
         $sql = "SELECT 
                     lakhok_jobs.employee_id, 
                     AVG(lakhok_jobs.rating) AS average_rating, 
+                    COUNT(lakhok_jobs.rating) AS rating_count, 
                     ANY_VALUE(lakhok_jobs.title) AS title,
                     ANY_VALUE(lakhok_jobs.price) AS price, 
                     ANY_VALUE(lakhok_jobs.img) AS img,
