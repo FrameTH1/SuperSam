@@ -1,12 +1,15 @@
 <?php
 session_start();
-
-include "../action/database.php"
-
-    ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
 <style>
     .text-neon-green {
@@ -37,11 +40,11 @@ include "../action/database.php"
 
     .image-cover {
         min-height: 225px;
-    }   
+    }
 
     .image-cover img {
         object-fit: cover;
-    }   
+    }
 
     .btn-find {
         color: #126f43;
@@ -67,8 +70,6 @@ include "../action/database.php"
         /* ซ่อนข้อความที่ยาวเกิน */
         text-overflow: ellipsis;
         /* เพิ่มจุดไข่ปลา (...) */
-        max-width: 100%;
-        /* กำหนดความกว้างสูงสุด */
     }
 
     #unverify {
@@ -81,8 +82,6 @@ include "../action/database.php"
         /* ซ่อนข้อความที่ยาวเกิน */
         text-overflow: ellipsis;
         /* เพิ่มจุดไข่ปลา (...) */
-        max-width: 100%;
-        /* กำหนดความกว้างสูงสุด */
     }
 
     .line-clamp {
@@ -103,12 +102,33 @@ include "../action/database.php"
             text-overflow: ellipsis;
         }
     }
-</style>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+    .img {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .Stars {
+        --percent: calc(var(--rating) / 5 * 100%);
+
+        display: inline-block;
+        font-family: Times; // make sure ★ appears correctly
+        line-height: 1;
+        margin: auto 0;
+
+        &::before {
+            content: '★★★★★';
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, #fc0 var(--percent), #DADADA var(--percent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
+
+    #star {
+        color: #fc0;
+    }
+</style>
 
 <body>
     <?php require 'assets/navbar.php' ?>
@@ -146,8 +166,8 @@ include "../action/database.php"
                     </div>
                     <div class="d-flex mt-3 gap-2 justify-content-center">
                         <p class="h5 text-white my-auto text-center">หรือต้องการ</p>
-                        <button class="btn btn-find my-auto ms-1 me-0" type="button">
-                            ประกาศหางาน
+                        <button class="btn btn-find my-auto ms-1 me-0" type="button" data-bs-toggle="modal" data-bs-target="#hireModal">
+                            ประกาศจ้างงาน
                         </button>
                     </div>
                 </div>
@@ -158,7 +178,7 @@ include "../action/database.php"
 
             function updateButtonText(element, value) {
                 document.getElementById('dropdownMenuButton').innerText = element.innerText;
-                localStorage.setItem('find_verify', value);
+                localStorage.setItem('hire_verify', value);
             }
 
             // ฟังก์ชันที่เรียกใช้เมื่อกดปุ่ม Enter
@@ -172,9 +192,9 @@ include "../action/database.php"
             // ฟังก์ชันค้นหาข้อมูล
             function search() {
                 var searchQuery = document.querySelector('.search-anything').value;
-                var verify = localStorage.getItem('find_verify');
+                var verify = localStorage.getItem('hire_verify');
 
-                fetch('action/get_find.php', {
+                fetch('action/get_hire.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -191,15 +211,30 @@ include "../action/database.php"
 
                         // แสดงผลข้อมูลที่ค้นหา
                         data.forEach(row => {
+                            const rating = row.average_rating; // ค่าคะแนนเฉลี่ยจากฐานข้อมูล
+                            const max_rating = 5.0000; // ค่าคะแนนสูงสุด
+                            const percentage = (rating / max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
                             const content = `
                                 <div class="col-6 col-lg-3 px-2 mt-2">
-                                    <img class="w-100 h-auto rounded-3" src="https://placehold.co/600x400" alt="">
+                                    <img class="w-100 img rounded-3" src="${row.img}" alt="">
                                     <div class="px-1 w-100 mt-2 d-flex justify-content-between">
                                         <div class="d-flex gap-1">
                                             <img style="height: calc(45px * 65 / 100); width: auto;" src="${row.profile_image}" alt="">
                                             <p class="h6 my-auto text-limit">${row.fname}</p>
                                         </div>
-                                        <p class="h6 my-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
+                                        <div class="d-none d-sm-flex">
+                                            <div class="Stars" style="--rating: ` + rating + `;"></div>
+                                            <p class="h6 my-auto">( ${row.rating_count} โหวต )</p>
+                                        </div>
+                                        <div class="d-flex d-sm-none gap-1">
+                                            <p class="h6 my-auto">`+ (isNaN(parseFloat(rating).toFixed(1)) ? "" : parseFloat(parseFloat(rating).toFixed(1))) + `</p>
+                                            `+ (parseFloat(rating) > 0 ? '<div class="my-auto" id="star">★</div>' : '') + `
+                                        </div>
+                                    </div>
+                                    <div class="px-1 mt-2">
+                                        <div class="d-flex gap-2">
+                                            <p class="h6 my-auto w-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันตัวแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
+                                        </div>
                                     </div>
                                     <div class="px-1 mt-2">
                                         <p class="fs-6 fw-normal line-clamp">${row.title}</p>
@@ -222,7 +257,6 @@ include "../action/database.php"
         </script>
 
         <div id="results" class="row mt-2"></div>
-
 
         <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
             aria-hidden="true">
@@ -269,11 +303,32 @@ include "../action/database.php"
             </div>
         </div>
 
+        <div class="modal fade" id="hireModal" tabindex="-1" aria-labelledby="hireModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="hireModalLabel">ประกาศหางาน</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="h5 text-center">แนบรูปภาพ</p>
+                        <input class="form-control" type="file" id="jobImage" accept="image/*">
+                        <p class="h5 mt-2 text-center">รายละเอียดงาน</p>
+                        <textarea class="form-control" id="jobDescription" placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3"></textarea>
+                        <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
+                        <div class="d-flex gap-2">
+                            <input class="form-control" type="text" placeholder="เช่น เริ่มต้น 10, จุดละ 1">
+                            <p class="h5 my-auto">บาท</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success">ส่งประกาศ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="mb-3"></div>
     </div>
-
-
-
 </body>
 
 </html>
