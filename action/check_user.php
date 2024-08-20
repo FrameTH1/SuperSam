@@ -26,6 +26,7 @@ if ($result->num_rows > 0) {
     $row = $result->fetch_assoc(); // ดึงข้อมูลแถวแรก
     $_SESSION["tel"] = $row["tel"]; // ใช้ค่าจากแถวที่ดึงมา
     $_SESSION["contact"] = $row["contact"]; // ใช้ค่าจากแถวที่ดึงมา
+    $_SESSION["id"] = $row["id"]; // ใช้ค่าจากแถวที่ดึงมา
     echo json_encode(['exists' => true]);
 } else {
     // ไม่มีผู้ใช้, เพิ่มเข้าไป

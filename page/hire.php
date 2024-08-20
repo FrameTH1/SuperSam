@@ -169,7 +169,8 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     </div>
                     <div class="d-flex mt-3 gap-2 justify-content-center">
                         <p class="h5 text-white my-auto text-center">หรือต้องการ</p>
-                        <button class="btn btn-find my-auto ms-1 me-0" type="button" data-bs-toggle="modal" data-bs-target="#hireModal">
+                        <button class="btn btn-find my-auto ms-1 me-0" type="button" data-bs-toggle="modal"
+                            data-bs-target="#hireModal">
                             ประกาศจ้างงาน
                         </button>
                     </div>
@@ -313,23 +314,50 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                         <h5 class="modal-title" id="hireModalLabel">ประกาศจ้างงาน</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <p class="h5 text-center">แนบรูปภาพ</p>
-                        <input class="form-control" type="file" id="jobImage" accept="image/*">
-                        <p class="h5 mt-2 text-center">รายละเอียดงาน</p>
-                        <textarea class="form-control" id="jobDescription" placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3"></textarea>
-                        <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
-                        <div class="d-flex gap-2">
-                            <input class="form-control" type="text" placeholder="เช่น เริ่มต้น 10, จุดละ 1">
-                            <p class="h5 my-auto">บาท</p>
+                    <form id="jobForm" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <p class="h5 text-center">แนบรูปภาพ</p>
+                            <input class="form-control" type="file" id="jobImage" name="jobImage" accept="image/*">
+                            <p class="h5 mt-2 text-center">ชื่อของงาน</p>
+                            <input class="form-control" type="text" id="jobTitle" name="jobTitle" name="price"
+                                placeholder="ชื่อของงานที่ต้องทำ">
+                            <p class="h5 mt-2 text-center">รายละเอียดงาน</p>
+                            <textarea class="form-control" name="jobDescription" id="jobDescription"
+                                placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3"></textarea>
+                            <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
+                            <div class="d-flex gap-2">
+                                <input class="form-control" type="text" id="jobPrice" name="jobPrice"
+                                    placeholder="เช่น เริ่มต้น 10, จุดละ 1">
+                                <p class="h5 my-auto">บาท</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success">ส่งประกาศ</button>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" onclick="submitJobForm()">ส่งประกาศ</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+
+        <script>
+            function submitJobForm() {
+                var form = document.getElementById('jobForm');
+                var formData = new FormData(form);
+
+                fetch('action/create_post.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+        </script>
+
         <div class="mb-3"></div>
     </div>
 </body>
