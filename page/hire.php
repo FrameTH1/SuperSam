@@ -127,6 +127,10 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
             -webkit-text-fill-color: transparent;
         }
     }
+
+    #star {
+        color: #fc0;
+    }
 </style>
 
 <body>
@@ -221,17 +225,18 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                                             <img style="height: calc(45px * 65 / 100); width: auto;" src="${row.profile_image}" alt="">
                                             <p class="h6 my-auto text-limit">${row.fname}</p>
                                         </div>
-                                        <div class="d-flex">
-                                            <div class="Stars" style="--rating: ` + rating + `;" aria-label="Rating of this product is 2.3 out of 5."></div>
+                                        <div class="d-none d-sm-flex">
+                                            <div class="Stars" style="--rating: ` + rating + `;"></div>
                                             <p class="h6 my-auto">( ${row.rating_count} โหวต )</p>
+                                        </div>
+                                        <div class="d-flex d-sm-none gap-1">
+                                            <p class="h6 my-auto">`+ (isNaN(parseFloat(rating).toFixed(1)) ? "" : parseFloat(parseFloat(rating).toFixed(1))) +`</p>
+                                            `+ (parseFloat(rating) > 0 ? '<div class="my-auto" id="star">★</div>' : '') +`
                                         </div>
                                     </div>
                                     <div class="px-1 mt-2">
                                         <div class="d-flex gap-2">
-                                            <p class="h5 my-auto">แท็กที่มี</p>
-                                            <div>
-                                                <p class="h6 my-auto w-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
-                                            </div>
+                                            <p class="h6 my-auto w-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันตัวแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
                                         </div>
                                     </div>
                                     <div class="px-1 mt-2">
