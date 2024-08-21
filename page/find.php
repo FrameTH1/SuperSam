@@ -166,7 +166,8 @@ session_start();
                     </div>
                     <div class="d-flex mt-3 gap-2 justify-content-center">
                         <p class="h5 text-white my-auto text-center">หรือต้องการ</p>
-                        <button class="btn btn-find my-auto ms-1 me-0" type="button" data-bs-toggle="modal" data-bs-target="#findModal">
+                        <button class="btn btn-find my-auto ms-1 me-0" type="button" data-bs-toggle="modal"
+                            data-bs-target="#findModal">
                             ประกาศหางาน
                         </button>
                     </div>
@@ -215,7 +216,7 @@ session_start();
                             const max_rating = 5.0000; // ค่าคะแนนสูงสุด
                             const percentage = (rating / max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
                             const content = `
-                                <div class="col-6 col-lg-3 px-2 mt-2">
+                                <div class="col-6 col-lg-3 px-2 mt-2" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}')">
                                     <img class="w-100 img rounded-3" src="${row.img}" alt="">
                                     <div class="px-1 w-100 mt-2 d-flex justify-content-between">
                                         <div class="d-flex gap-1">
@@ -254,6 +255,63 @@ session_start();
 
             // เพิ่ม event listener ให้ฟิลด์ค้นหา
             document.querySelector('.search-anything').addEventListener('keydown', handleEnterKey);
+        </script>
+
+        <!-- Modal Structure -->
+        <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoModalLabel">รายละเอียด</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- เนื้อหาของ popup -->
+                        <img id="modal-img" class="w-100 img rounded-3 mb-3" src="" alt="">
+                        <h4 id="modal-title"></h4>
+                        <hr>
+                        <p class="h6" id="modal-fname"></p>
+                        <div class="d-flex gap-1 mb-2">
+                            <p class="h6 my-auto">คะแนนผู้จ้าง : </p>
+                            <div class="d-flex">
+                                <div class="Stars my-auto" id="modal-stars" style="--rating: 0;"></div>
+                                <p class="my-auto h6" id="modal-rating-count"></p>
+                            </div>
+                        </div>
+                        <p class="h6" id="modal-contact"></p>
+                        <hr>
+                        <p class="h6" id="modal-description"></p>
+                        <p class="h6" id="modal-price"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            function checkValue(input) {
+                return input === '' ? 'ไม่ได้ระบุ' : input;
+            }
+
+            function openModal(title, img, price, fname, rating, rating_count, profile_image, verify, contact, description) {
+
+                document.getElementById('modal-title').innerText = title;
+                document.getElementById('modal-img').src = img;
+                document.getElementById('modal-fname').innerText = 'ชื่อผู้จ้าง : ' + fname;
+                document.getElementById('modal-stars').style.setProperty('--rating', rating);
+                document.getElementById('modal-rating-count').innerText = `( ${rating_count} โหวต )`;
+                document.getElementById('modal-contact').innerText = 'ข้อมูลติดต่อผู้จ้าง : ' + `${checkValue(contact)}`;
+
+                document.getElementById('modal-description').innerText = 'รายละเอียดงาน : ' + `${checkValue(description)}`;
+                document.getElementById('modal-price').innerText = 'ราคา : ' + `${price} บาท`;
+
+                // แสดง Modal
+                var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
+                myModal.show();
+            }
         </script>
 
         <div id="results" class="row mt-2"></div>
@@ -314,7 +372,8 @@ session_start();
                         <p class="h5 text-center">แนบรูปภาพ</p>
                         <input class="form-control" type="file" id="jobImage" accept="image/*">
                         <p class="h5 mt-2 text-center">รายละเอียดงาน</p>
-                        <textarea class="form-control" id="jobDescription" placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3"></textarea>
+                        <textarea class="form-control" id="jobDescription"
+                            placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3"></textarea>
                         <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
                         <div class="d-flex gap-2">
                             <input class="form-control" type="text" placeholder="เช่น เริ่มต้น 10, จุดละ 1">
