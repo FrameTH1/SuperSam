@@ -238,12 +238,12 @@ session_start();
                                             <p class="h6 my-auto text-limit">${row.fname}</p>
                                         </div>
                                         <div class="d-none d-sm-flex">
-                                            <div class="Stars" style="--rating: ` + rating + `;"></div>
+                                            <div class="Stars" style="--rating: ` + checkValue2(rating) + `;"></div>
                                             <p class="h6 my-auto">( ${row.rating_count} โหวต )</p>
                                         </div>
                                         <div class="d-flex d-sm-none gap-1">
-                                            <p class="h6 my-auto">`+ (isNaN(parseFloat(rating).toFixed(1)) ? "" : parseFloat(parseFloat(rating).toFixed(1))) + `</p>
-                                            `+ (parseFloat(rating) > 0 ? '<div class="my-auto" id="star">★</div>' : '') + `
+                                            <p class="h6 my-auto">`+ (isNaN(parseFloat(checkValue2(rating)).toFixed(1)) ? "" : parseFloat(parseFloat(checkValue2(rating)).toFixed(1))) + `</p>
+                                            `+ (parseFloat(checkValue2(rating)) >= 0 ? '<div class="my-auto" id="star">★</div>' : '') + `
                                         </div>
                                     </div>
                                     <div class="px-1 mt-2">
