@@ -131,6 +131,20 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
     #star {
         color: #fc0;
     }
+
+    #suggestions div {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #suggestions div:hover {
+        background-color: #f0f0f0;
+    }
+
+    .select_bar_width {
+        width: calc(100% - (16px * 2));
+    }
 </style>
 
 <body>
@@ -183,6 +197,15 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
             function updateButtonText(element, value) {
                 document.getElementById('dropdownMenuButton').innerText = element.innerText;
                 localStorage.setItem('hire_verify', value);
+            }
+
+            function updateButtonText2(checkbox, value) {
+                const selectedValues = [];
+                document.querySelectorAll('#dropdownList .form-check-input:checked').forEach((item) => {
+                    selectedValues.push(item.value);
+                });
+                // ทำบางสิ่งกับค่า selectedValues เช่น แสดงในปุ่ม dropdown
+                console.log(selectedValues);
             }
 
             // ฟังก์ชันที่เรียกใช้เมื่อกดปุ่ม Enter
@@ -314,21 +337,32 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                         <h5 class="modal-title" id="hireModalLabel">ประกาศจ้างงาน</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form id="jobForm" enctype="multipart/form-data">
+                    <form id="jobForm" enctype="multipart/form-data" method="POST">
                         <div class="modal-body">
                             <p class="h5 text-center">แนบรูปภาพ</p>
-                            <input class="form-control" type="file" id="jobImage" name="jobImage" accept="image/*">
+                            <input class="form-control" type="file" id="jobImage" name="jobImage" accept="image/*"
+                                required>
                             <p class="h5 mt-2 text-center">ชื่อของงาน</p>
-                            <input class="form-control" type="text" id="jobTitle" name="jobTitle" name="price"
-                                placeholder="ชื่อของงานที่ต้องทำ">
+                            <input class="form-control" type="text" id="jobTitle" name="jobTitle"
+                                placeholder="ชื่อของงานที่ต้องทำ" required>
                             <p class="h5 mt-2 text-center">รายละเอียดงาน</p>
                             <textarea class="form-control" name="jobDescription" id="jobDescription"
-                                placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3"></textarea>
+                                placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3" required></textarea>
                             <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
                             <div class="d-flex gap-2">
                                 <input class="form-control" type="text" id="jobPrice" name="jobPrice"
-                                    placeholder="เช่น เริ่มต้น 10, จุดละ 1">
+                                    placeholder="เช่น เริ่มต้น 10, จุดละ 1" required>
                                 <p class="h5 my-auto">บาท</p>
+                            </div>
+                            <p class="h5 mt-2 text-center">หมวดหมู่ของงาน</p>
+                            <div>
+                                <button class="btn btn-secondary dropdown-toggle w-100" type="button"
+                                    id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                    เลือกหมวดหมู่
+                                </button>
+                                <ul class="dropdown-menu select_bar_width" aria-labelledby="dropdownMenuButton2"
+                                    id="dropdownList">
+                                </ul>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -340,8 +374,44 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
         </div>
 
         <script>
+            fetch('action/get_tag.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateDropdown(data);
+                })
+                .catch(error => console.error('Fetch error:', error));
+
+            function updateDropdown(data) {
+                const list = document.getElementById('dropdownList');
+                list.innerHTML = ''; // Clear existing items
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<input type="hidden" value='${item}' name="type">
+                        <div class="form-check text-center d-flex justify-content-center gap-2">
+                        <input class="form-check-input" type="checkbox" id='${item}' value='${item}' onclick="updateButtonText2(this, '${item}')";>
+                        <label class="form-check-label" for='${item}'>
+                            ${item}
+                        </label>
+                        </div>`;
+                    list.appendChild(li);
+                });
+            }
+        </script>
+
+
+        <script>
             function submitJobForm() {
+                event.preventDefault(); // ป้องกันการกระทำเริ่มต้นของการส่งฟอร์ม
                 var form = document.getElementById('jobForm');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return; // หยุดฟังก์ชันถ้าข้อมูลในฟอร์มไม่ถูกต้อง
+                }
                 var formData = new FormData(form);
 
                 fetch('action/create_post.php', {
@@ -351,6 +421,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     .then(response => response.json())
                     .then(data => {
                         console.log('Success:', data);
+                        $('#hireModal').modal('hide');  // ใช้ jQuery เพื่อปิด modal
                     })
                     .catch((error) => {
                         console.error('Error:', error);

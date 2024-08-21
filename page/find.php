@@ -178,7 +178,7 @@ session_start();
 
             function updateButtonText(element, value) {
                 document.getElementById('dropdownMenuButton').innerText = element.innerText;
-                localStorage.setItem('hire_verify', value);
+                localStorage.setItem('find_verify', value);
             }
 
             // ฟังก์ชันที่เรียกใช้เมื่อกดปุ่ม Enter
@@ -192,7 +192,7 @@ session_start();
             // ฟังก์ชันค้นหาข้อมูล
             function search() {
                 var searchQuery = document.querySelector('.search-anything').value;
-                var verify = localStorage.getItem('hire_verify');
+                var verify = localStorage.getItem('find_verify');
 
                 fetch('action/get_find.php', {
                     method: 'POST',

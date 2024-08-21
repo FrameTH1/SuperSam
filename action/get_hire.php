@@ -27,7 +27,7 @@ if (isset($_POST['verify'])) {
                 WHERE lakhok_jobs.status = 'รอคนจ้างงาน'
                 AND lakhok_mushroom.verify = ?
                 AND lakhok_jobs.title LIKE ?
-                GROUP BY lakhok_jobs.employee_id";
+                GROUP BY lakhok_jobs.employee_id, title";
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("is", $_POST['verify'], $searchQuery);
@@ -59,7 +59,7 @@ if (isset($_POST['verify'])) {
                 INNER JOIN lakhok_mushroom ON lakhok_jobs.employee_id = lakhok_mushroom.id
                 WHERE lakhok_jobs.status = 'รอคนจ้างงาน'
                 AND lakhok_jobs.title LIKE ?
-                GROUP BY lakhok_jobs.employee_id";
+                GROUP BY lakhok_jobs.employee_id, title";
 
 
         $stmt = $conn->prepare($sql);

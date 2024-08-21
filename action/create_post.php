@@ -24,16 +24,17 @@ if (isset($_FILES['jobImage']) && $_FILES['jobImage']['error'] == 0) {
 }
 
 // เตรียมคำสั่ง SQL
-$sql = "INSERT INTO lakhok_jobs (title, img, price, description, employer_id, post_date) VALUES (?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO lakhok_jobs (title, img, price, description, employer_id, post_date, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 // ตั้งค่าโซนเวลา ตัวอย่างนี้ใช้เวลาของกรุงเทพฯ (Thailand)
 date_default_timezone_set('Asia/Bangkok');
 
 // รับวันที่และเวลาปัจจุบัน
 $currentDateTime = date('Y-m-d');
+$status = "รอคนหางาน";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssis", $jobTitle, $imagePath, $jobPrice, $jobDescription, $_SESSION["id"], $currentDateTime);
+$stmt->bind_param("ssssiss", $jobTitle, $imagePath, $jobPrice, $jobDescription, $_SESSION["id"], $currentDateTime, $status);
 
 // บันทึกข้อมูลลงฐานข้อมูล
 if ($stmt->execute()) {
