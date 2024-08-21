@@ -128,6 +128,20 @@ session_start();
     #star {
         color: #fc0;
     }
+
+    #suggestions div {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #suggestions div:hover {
+        background-color: #f0f0f0;
+    }
+
+    .select_bar_width {
+        width: calc(100% - (16px * 2));
+    }
 </style>
 
 <body>
@@ -216,7 +230,7 @@ session_start();
                             const max_rating = 5.0000; // ค่าคะแนนสูงสุด
                             const percentage = (rating / max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
                             const content = `
-                                <div class="col-6 col-lg-3 px-2 mt-2" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}')">
+                                <div class="col-6 col-lg-3 px-2 mt-2" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '`+JSON.parse(row.types)+`')">
                                     <img class="w-100 img rounded-3" src="${row.img}" alt="">
                                     <div class="px-1 w-100 mt-2 d-flex justify-content-between">
                                         <div class="d-flex gap-1">
@@ -280,11 +294,12 @@ session_start();
                         </div>
                         <p class="h6" id="modal-contact"></p>
                         <hr>
+                        <p class="h6" id="modal-type"></p>
                         <p class="h6" id="modal-description"></p>
                         <p class="h6" id="modal-price"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ปิด</button>
                     </div>
                 </div>
             </div>
@@ -293,18 +308,25 @@ session_start();
         <script>
 
             function checkValue(input) {
-                return input === '' ? 'ไม่ได้ระบุ' : input;
+                return input === '' | input === 'null' ? 'ไม่ได้ระบุ' : input;
             }
 
-            function openModal(title, img, price, fname, rating, rating_count, profile_image, verify, contact, description) {
+            function checkValue2(input) {
+                return input === null | input === 'null' ? 0 : input;
+            }
+
+            function openModal(title, img, price, fname, rating, rating_count, profile_image, verify, contact, description, array_type) {
+
+                console.log(array_type);
 
                 document.getElementById('modal-title').innerText = title;
                 document.getElementById('modal-img').src = img;
                 document.getElementById('modal-fname').innerText = 'ชื่อผู้จ้าง : ' + fname;
-                document.getElementById('modal-stars').style.setProperty('--rating', rating);
+                document.getElementById('modal-stars').style.setProperty('--rating', checkValue2(rating));
                 document.getElementById('modal-rating-count').innerText = `( ${rating_count} โหวต )`;
                 document.getElementById('modal-contact').innerText = 'ข้อมูลติดต่อผู้จ้าง : ' + `${checkValue(contact)}`;
 
+                document.getElementById('modal-type').innerText = 'หมวดหมู่งาน : ' + `${checkValue(array_type)}`;
                 document.getElementById('modal-description').innerText = 'รายละเอียดงาน : ' + `${checkValue(description)}`;
                 document.getElementById('modal-price').innerText = 'ราคา : ' + `${price} บาท`;
 
@@ -368,24 +390,122 @@ session_start();
                         <h5 class="modal-title" id="findModalLabel">ประกาศหางาน</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <p class="h5 text-center">แนบรูปภาพ</p>
-                        <input class="form-control" type="file" id="jobImage" accept="image/*">
-                        <p class="h5 mt-2 text-center">รายละเอียดงาน</p>
-                        <textarea class="form-control" id="jobDescription"
-                            placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3"></textarea>
-                        <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
-                        <div class="d-flex gap-2">
-                            <input class="form-control" type="text" placeholder="เช่น เริ่มต้น 10, จุดละ 1">
-                            <p class="h5 my-auto">บาท</p>
+                    <form id="jobForm" enctype="multipart/form-data" method="POST">
+                        <div class="modal-body">
+                            <p class="h5 text-center">แนบรูปภาพ</p>
+                            <input class="form-control" accept=".png, .jpg, .jpeg" type="file" id="jobImage" name="jobImage" accept="image/*"
+                                required>
+                            <p class="h5 mt-2 text-center">ชื่อของงาน</p>
+                            <input class="form-control" type="text" id="jobTitle" name="jobTitle"
+                                placeholder="ชื่อของงานที่ต้องทำ" required>
+                            <p class="h5 mt-2 text-center">รายละเอียดงาน</p>
+                            <textarea class="form-control" name="jobDescription" id="jobDescription"
+                                placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3" required></textarea>
+                            <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
+                            <div class="d-flex gap-2">
+                                <div class="row w-100">
+                                    <div class="col-4 pe-1">
+                                        <!-- Dropdown -->
+                                        <select class="form-select" id="priceType" name="priceType">
+                                            <option value="ทั้งหมด">ทั้งหมด</option>
+                                            <option value="เริ่มต้น">เริ่มต้น</option>
+                                            <option value="จุดละ">จุดละ</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8 ps-1">
+                                        <!-- Input -->
+                                        <input class="form-control" type="number" id="jobPrice" name="jobPrice" placeholder="ราคาที่ต้องการ" step="1" required>
+                                    </div>
+                                </div>
+                                <p class="h5 my-auto">บาท</p>
+                            </div>
+                            <p class="h5 mt-2 text-center">หมวดหมู่ของงาน</p>
+                            <div>
+                                <button class="btn btn-secondary dropdown-toggle w-100" type="button"
+                                    id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                    เลือกหมวดหมู่
+                                </button>
+                                <ul class="dropdown-menu select_bar_width" aria-labelledby="dropdownMenuButton2"
+                                    id="dropdownList">
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success">ส่งประกาศ</button>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" onclick="submitJobForm()">ส่งประกาศ</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+
+        <script>
+            fetch('action/get_tag.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateDropdown(data);
+                })
+                .catch(error => console.error('Fetch error:', error));
+
+            function updateDropdown(data) {
+                const list = document.getElementById('dropdownList');
+                list.innerHTML = ''; // Clear existing items
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<input type="hidden" value='${item}' name="type">
+                            <div class="form-check text-center d-flex justify-content-center gap-2">
+                                <input class="form-check-input" type="checkbox" id='${item}' value='${item}' name="selectedItems[]">
+                                <label class="form-check-label" for='${item}'>
+                                    ${item}
+                                </label>
+                            </div>`;
+                    list.appendChild(li);
+                });
+            }
+        </script>
+
+        <script>
+            function submitJobForm() {
+                event.preventDefault(); // ป้องกันการกระทำเริ่มต้นของการส่งฟอร์ม
+                var form = document.getElementById('jobForm');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return; // หยุดฟังก์ชันถ้าข้อมูลในฟอร์มไม่ถูกต้อง
+                }
+                var formData = new FormData(form);
+
+                // ลบฟิลด์ที่ไม่ต้องการออกจาก FormData
+                formData.delete('type'); // ลบฟิลด์ 'type' ที่เป็นการซ้ำซ้อนออก
+                formData.delete('selectedItems[]'); // ลบฟิลด์ 'type' ที่เป็นการซ้ำซ้อนออก
+
+                const selectedItems = [];
+                document.querySelectorAll('input[name="selectedItems[]"]:checked').forEach((checkbox) => {
+                    selectedItems.push(checkbox.value);
+                });
+
+                // เพิ่ม selectedItems ลงใน FormData
+                formData.append('selectedItems', JSON.stringify(selectedItems));
+
+                fetch('action/create_find_post.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        $('#findModal').modal('hide');  // ใช้ jQuery เพื่อปิด modal
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+        </script>
+
+
         <div class="mb-3"></div>
     </div>
 </body>

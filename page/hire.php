@@ -233,7 +233,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                             const max_rating = 5.0000; // ค่าคะแนนสูงสุด
                             const percentage = (rating / max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
                             const content = `
-                                <div class="col-6 col-lg-3 px-2 mt-2">
+                                 <div class="col-6 col-lg-3 px-2 mt-2" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '`+JSON.parse(row.types)+`')">
                                     <img class="w-100 img rounded-3" src="${row.img}" alt="">
                                     <div class="px-1 w-100 mt-2 d-flex justify-content-between">
                                         <div class="d-flex gap-1">
@@ -272,6 +272,71 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
 
             // เพิ่ม event listener ให้ฟิลด์ค้นหา
             document.querySelector('.search-anything').addEventListener('keydown', handleEnterKey);
+        </script>
+
+        <!-- Modal Structure -->
+        <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoModalLabel">รายละเอียด</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- เนื้อหาของ popup -->
+                        <img id="modal-img" class="w-100 img rounded-3 mb-3" src="" alt="">
+                        <h4 id="modal-title"></h4>
+                        <hr>
+                        <p class="h6" id="modal-fname"></p>
+                        <div class="d-flex gap-1 mb-2">
+                            <p class="h6 my-auto">คะแนนผู้จ้าง : </p>
+                            <div class="d-flex">
+                                <div class="Stars my-auto" id="modal-stars" style="--rating: 0;"></div>
+                                <p class="my-auto h6" id="modal-rating-count"></p>
+                            </div>
+                        </div>
+                        <p class="h6" id="modal-contact"></p>
+                        <hr>
+                        <p class="h6" id="modal-type"></p>
+                        <p class="h6" id="modal-description"></p>
+                        <p class="h6" id="modal-price"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ปิด</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            function checkValue(input) {
+                return input === '' | input === 'null' ? 'ไม่ได้ระบุ' : input;
+            }
+
+            function checkValue2(input) {
+                return input === null | input === 'null' ? 0 : input;
+            }
+
+            function openModal(title, img, price, fname, rating, rating_count, profile_image, verify, contact, description, array_type) {
+
+                console.log(array_type);
+
+                document.getElementById('modal-title').innerText = title;
+                document.getElementById('modal-img').src = img;
+                document.getElementById('modal-fname').innerText = 'ชื่อผู้จ้าง : ' + fname;
+                document.getElementById('modal-stars').style.setProperty('--rating', checkValue2(rating));
+                document.getElementById('modal-rating-count').innerText = `( ${rating_count} โหวต )`;
+                document.getElementById('modal-contact').innerText = 'ข้อมูลติดต่อผู้จ้าง : ' + `${checkValue(contact)}`;
+
+                document.getElementById('modal-type').innerText = 'หมวดหมู่งาน : ' + `${checkValue(array_type)}`;
+                document.getElementById('modal-description').innerText = 'รายละเอียดงาน : ' + `${checkValue(description)}`;
+                document.getElementById('modal-price').innerText = 'ราคา : ' + `${price} บาท`;
+
+                // แสดง Modal
+                var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
+                myModal.show();
+            }
         </script>
 
         <div id="results" class="row mt-2"></div>
@@ -331,8 +396,8 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     <form id="jobForm" enctype="multipart/form-data" method="POST">
                         <div class="modal-body">
                             <p class="h5 text-center">แนบรูปภาพ</p>
-                            <input class="form-control" type="file" id="jobImage" name="jobImage" accept="image/*"
-                                required>
+                            <input class="form-control" accept=".png, .jpg, .jpeg" type="file" id="jobImage"
+                                name="jobImage" accept="image/*" required>
                             <p class="h5 mt-2 text-center">ชื่อของงาน</p>
                             <input class="form-control" type="text" id="jobTitle" name="jobTitle"
                                 placeholder="ชื่อของงานที่ต้องทำ" required>
@@ -352,8 +417,8 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                                     </div>
                                     <div class="col-8 ps-1">
                                         <!-- Input -->
-                                        <input class="form-control" type="text" id="jobPrice" name="jobPrice"
-                                            placeholder="ราคาที่ต้องการ" required>
+                                        <input class="form-control" type="number" id="jobPrice" name="jobPrice"
+                                            placeholder="ราคาที่ต้องการ" step="1" required>
                                     </div>
                                 </div>
                                 <p class="h5 my-auto">บาท</p>
@@ -430,7 +495,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 // เพิ่ม selectedItems ลงใน FormData
                 formData.append('selectedItems', JSON.stringify(selectedItems));
 
-                fetch('action/create_post.php', {
+                fetch('action/create_hire_post.php', {
                     method: 'POST',
                     body: formData
                 })
