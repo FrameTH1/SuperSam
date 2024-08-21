@@ -199,15 +199,6 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 localStorage.setItem('hire_verify', value);
             }
 
-            function updateButtonText2(checkbox, value) {
-                const selectedValues = [];
-                document.querySelectorAll('#dropdownList .form-check-input:checked').forEach((item) => {
-                    selectedValues.push(item.value);
-                });
-                // ทำบางสิ่งกับค่า selectedValues เช่น แสดงในปุ่ม dropdown
-                console.log(selectedValues);
-            }
-
             // ฟังก์ชันที่เรียกใช้เมื่อกดปุ่ม Enter
             function handleEnterKey(event) {
                 if (event.key === 'Enter') {
@@ -350,8 +341,21 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                                 placeholder="ควรใส่รายละเอียดให้ผู้อ่านเข้าใจได้ง่าย" rows="3" required></textarea>
                             <p class="h5 mt-2 text-center">ราคาที่ต้องการ</p>
                             <div class="d-flex gap-2">
-                                <input class="form-control" type="text" id="jobPrice" name="jobPrice"
-                                    placeholder="เช่น เริ่มต้น 10, จุดละ 1" required>
+                                <div class="row w-100">
+                                    <div class="col-4 pe-1">
+                                        <!-- Dropdown -->
+                                        <select class="form-select" id="priceType" name="priceType">
+                                            <option value="ทั้งหมด">ทั้งหมด</option>
+                                            <option value="เริ่มต้น">เริ่มต้น</option>
+                                            <option value="จุดละ">จุดละ</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8 ps-1">
+                                        <!-- Input -->
+                                        <input class="form-control" type="text" id="jobPrice" name="jobPrice"
+                                            placeholder="ราคาที่ต้องการ" required>
+                                    </div>
+                                </div>
                                 <p class="h5 my-auto">บาท</p>
                             </div>
                             <p class="h5 mt-2 text-center">หมวดหมู่ของงาน</p>
@@ -392,12 +396,12 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 data.forEach(item => {
                     const li = document.createElement('li');
                     li.innerHTML = `<input type="hidden" value='${item}' name="type">
-                        <div class="form-check text-center d-flex justify-content-center gap-2">
-                        <input class="form-check-input" type="checkbox" id='${item}' value='${item}' onclick="updateButtonText2(this, '${item}')";>
-                        <label class="form-check-label" for='${item}'>
-                            ${item}
-                        </label>
-                        </div>`;
+                            <div class="form-check text-center d-flex justify-content-center gap-2">
+                                <input class="form-check-input" type="checkbox" id='${item}' value='${item}' name="selectedItems[]">
+                                <label class="form-check-label" for='${item}'>
+                                    ${item}
+                                </label>
+                            </div>`;
                     list.appendChild(li);
                 });
             }
@@ -413,6 +417,18 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     return; // หยุดฟังก์ชันถ้าข้อมูลในฟอร์มไม่ถูกต้อง
                 }
                 var formData = new FormData(form);
+
+                // ลบฟิลด์ที่ไม่ต้องการออกจาก FormData
+                formData.delete('type'); // ลบฟิลด์ 'type' ที่เป็นการซ้ำซ้อนออก
+                formData.delete('selectedItems[]'); // ลบฟิลด์ 'type' ที่เป็นการซ้ำซ้อนออก
+
+                const selectedItems = [];
+                document.querySelectorAll('input[name="selectedItems[]"]:checked').forEach((checkbox) => {
+                    selectedItems.push(checkbox.value);
+                });
+
+                // เพิ่ม selectedItems ลงใน FormData
+                formData.append('selectedItems', JSON.stringify(selectedItems));
 
                 fetch('action/create_post.php', {
                     method: 'POST',

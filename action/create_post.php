@@ -5,7 +5,8 @@ include 'database.php';
 // รับข้อมูลจากฟอร์ม
 $jobTitle = $_POST['jobTitle'];
 $jobDescription = $_POST['jobDescription'];
-$jobPrice = $_POST['jobPrice'];
+$jobPrice = $_POST['priceType']. ' ' . $_POST['jobPrice'];
+$selectedItems = $_POST['selectedItems'];
 $imagePath = "";
 
 // ตรวจสอบและอัพโหลดรูปภาพ
@@ -24,7 +25,7 @@ if (isset($_FILES['jobImage']) && $_FILES['jobImage']['error'] == 0) {
 }
 
 // เตรียมคำสั่ง SQL
-$sql = "INSERT INTO lakhok_jobs (title, img, price, description, employer_id, post_date, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO lakhok_jobs (title, img, price, description, employer_id, post_date, status , types) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 // ตั้งค่าโซนเวลา ตัวอย่างนี้ใช้เวลาของกรุงเทพฯ (Thailand)
 date_default_timezone_set('Asia/Bangkok');
@@ -34,7 +35,7 @@ $currentDateTime = date('Y-m-d');
 $status = "รอคนหางาน";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssiss", $jobTitle, $imagePath, $jobPrice, $jobDescription, $_SESSION["id"], $currentDateTime, $status);
+$stmt->bind_param("ssssisss", $jobTitle, $imagePath, $jobPrice, $jobDescription, $_SESSION["id"], $currentDateTime, $status, $selectedItems);
 
 // บันทึกข้อมูลลงฐานข้อมูล
 if ($stmt->execute()) {
