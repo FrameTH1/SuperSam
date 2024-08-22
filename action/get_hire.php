@@ -13,6 +13,8 @@ if (isset($_POST['verify'])) {
     if ($_POST['verify'] == 0 || $_POST['verify'] == 1) {
         // เตรียม query พร้อมเงื่อนไข verify
         $sql = "SELECT 
+            ANY_VALUE(lj.id) AS id_post,
+            ANY_VALUE(lm.lineid) AS id,
             lj.employee_id, 
             ANY_VALUE(r.rating_count) AS rating_count, 
             ANY_VALUE(r.average_rating) AS average_rating, 
@@ -58,6 +60,8 @@ if (isset($_POST['verify'])) {
 
     } else {
         $sql = "SELECT 
+            ANY_VALUE(lj.id) AS id_post,
+            ANY_VALUE(lm.lineid) AS id,
             lj.employee_id, 
             ANY_VALUE(r.rating_count) AS rating_count, 
             ANY_VALUE(r.average_rating) AS average_rating, 

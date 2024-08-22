@@ -315,7 +315,7 @@ session_start();
                         <p class="h6" id="modal-price"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ปิด</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">ติดต่อผู้จ้างงาน</button>
                     </div>
                 </div>
             </div>
