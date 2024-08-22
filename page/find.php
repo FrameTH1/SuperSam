@@ -12,6 +12,18 @@ session_start();
 </head>
 
 <style>
+
+    .card {
+        border-color: black;
+        border-width: 1px;
+        max-height: 350px;
+        overflow-y: scroll;
+    }
+
+    .card::-webkit-scrollbar {
+        width: 0px; /* ความกว้างของ scrollbar */
+    }
+
     .text-neon-green {
         color: #1dbf72;
     }
@@ -230,34 +242,38 @@ session_start();
                             const max_rating = 5.0000; // ค่าคะแนนสูงสุด
                             const percentage = (rating / max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
                             const content = `
-                                <div class="col-6 col-lg-3 px-2 mt-2" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '`+JSON.parse(row.types)+`')">
+                            <div class="col-6 col-lg-3 px-2 mt-2">
+                                <div class="shadow card" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '`+JSON.parse(row.types)+`')">
                                     <img class="w-100 img rounded-3" src="${row.img}" alt="">
-                                    <div class="px-1 w-100 mt-2 d-flex justify-content-between">
-                                        <div class="d-flex gap-1">
-                                            <img style="height: calc(45px * 65 / 100); width: auto;" src="${row.profile_image}" alt="">
-                                            <p class="h6 my-auto text-limit">${row.fname}</p>
+                                    <div class="px-1">
+                                        <div class="px-1 w-100 mt-2 d-flex justify-content-between">
+                                            <div class="d-flex gap-1">
+                                                <img style="height: calc(45px * 65 / 100); width: auto;" src="${row.profile_image}" alt="">
+                                                <p class="h6 my-auto text-limit">${row.fname}</p>
+                                            </div>
+                                            <div class="d-none d-sm-flex">
+                                                <div class="Stars" style="--rating: ` + checkValue2(rating) + `;"></div>
+                                                <p class="h6 my-auto">( ${row.rating_count} โหวต )</p>
+                                            </div>
+                                            <div class="d-flex d-sm-none gap-1">
+                                                <p class="h6 my-auto">`+ (isNaN(parseFloat(checkValue2(rating)).toFixed(1)) ? "" : parseFloat(parseFloat(checkValue2(rating)).toFixed(1))) + `</p>
+                                                `+ (parseFloat(checkValue2(rating)) >= 0 ? '<div class="my-auto" id="star">★</div>' : '') + `
+                                            </div>
                                         </div>
-                                        <div class="d-none d-sm-flex">
-                                            <div class="Stars" style="--rating: ` + checkValue2(rating) + `;"></div>
-                                            <p class="h6 my-auto">( ${row.rating_count} โหวต )</p>
+                                        <div class="px-1 mt-2">
+                                            <div class="d-flex gap-2">
+                                                <p class="h6 my-auto w-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันตัวแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
+                                            </div>
                                         </div>
-                                        <div class="d-flex d-sm-none gap-1">
-                                            <p class="h6 my-auto">`+ (isNaN(parseFloat(checkValue2(rating)).toFixed(1)) ? "" : parseFloat(parseFloat(checkValue2(rating)).toFixed(1))) + `</p>
-                                            `+ (parseFloat(checkValue2(rating)) >= 0 ? '<div class="my-auto" id="star">★</div>' : '') + `
+                                        <div class="px-1 mt-2">
+                                            <p class="fs-6 fw-normal line-clamp">${row.title}</p>
                                         </div>
-                                    </div>
-                                    <div class="px-1 mt-2">
-                                        <div class="d-flex gap-2">
-                                            <p class="h6 my-auto w-auto" id="${row.verify == 1 ? 'verify' : 'unverify'}">${row.verify == 1 ? 'ยืนยันตัวแล้ว' : 'ยังไม่ยืนยันตัว'}</p>
+                                        <div class="px-1 d-flex">
+                                            <p class="h5" id="price">ราคา ${row.price} บาท</p>
                                         </div>
-                                    </div>
-                                    <div class="px-1 mt-2">
-                                        <p class="fs-6 fw-normal line-clamp">${row.title}</p>
-                                    </div>
-                                    <div class="px-1 d-flex">
-                                        <p class="h5" id="price">ราคา ${row.price} บาท</p>
                                     </div>
                                 </div>
+                            </div>
                             `;
                             resultsDiv.innerHTML += content;
                         });

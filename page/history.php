@@ -181,37 +181,6 @@ session_start();
         <div id="results" class="row mt-2"></div>
 
         <script>
-
-            function checkValue(input) {
-                return input === '' | input === 'null' ? 'ไม่ได้ระบุ' : input;
-            }
-
-            function checkValue2(input) {
-                return input === null | input === 'null' ? 0 : input;
-            }
-
-            function openModal(title, img, price, fname, rating, rating_count, profile_image, verify, contact, description, array_type) {
-
-                console.log(array_type);
-
-                document.getElementById('modal-title').innerText = title;
-                document.getElementById('modal-img').src = img;
-                document.getElementById('modal-fname').innerText = 'ชื่อผู้จ้าง : ' + fname;
-                document.getElementById('modal-stars').style.setProperty('--rating', checkValue2(rating));
-                document.getElementById('modal-rating-count').innerText = `( ${rating_count} โหวต )`;
-                document.getElementById('modal-contact').innerText = 'ข้อมูลติดต่อผู้จ้าง : ' + `${checkValue(contact)}`;
-
-                document.getElementById('modal-type').innerText = 'หมวดหมู่งาน : ' + `${checkValue(array_type)}`;
-                document.getElementById('modal-description').innerText = 'รายละเอียดงาน : ' + `${checkValue(description)}`;
-                document.getElementById('modal-price').innerText = 'ราคา : ' + `${price} บาท`;
-
-                // แสดง Modal
-                var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
-                myModal.show();
-            }
-        </script>
-
-        <script>
             const form = document.getElementById('jobForm');
             const formData = new FormData(form);
 
@@ -228,8 +197,8 @@ session_start();
 
                         // สร้าง HTML element สำหรับแต่ละรายการ
                         const itemHTML = `
-                                    <div class="col-6 col-lg-3 mt-2 mb-2">
-                                   <div class="shadow card p-3" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '` + JSON.parse(row.types) + `')">
+                                    <div class="col-6 col-lg-3 mt-2 mb-1">
+                                   <div class="shadow card p-3">
                                      <img class="w-100 img rounded-3" src="${row.img}" alt="">
                                     <div class="px-1 mt-2">
                                         <p class="h6 fw-normal line-clamp">ชื่องาน : ${row.title}</p>
