@@ -246,7 +246,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                             const percentage = (rating / max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
                             const content = `
                                 <div class="col-6 col-lg-3 px-2 mt-2">
-                                    <div class="shadow card px-1" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '`+JSON.parse(row.types)+`')">
+                                    <div class="shadow card" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '`+JSON.parse(row.types)+`')">
                                         <img class="w-100 img rounded-3" src="${row.img}" alt="">
                                         <div class="px-1">
                                             <div class="px-1 w-100 mt-2 d-flex justify-content-between">
@@ -343,7 +343,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 document.getElementById('modal-fname').innerText = 'ชื่อผู้จ้าง : ' + fname;
                 document.getElementById('modal-stars').style.setProperty('--rating', checkValue2(rating));
                 document.getElementById('modal-rating-count').innerText = `( ${rating_count} โหวต )`;
-                document.getElementById('modal-contact').innerText = 'ข้อมูลติดต่อผู้จ้าง : ' + `${checkValue(contact)}`;
+                document.getElementById('modal-contact').innerText = 'ข้อมูลติดต่อผู้ทำ : ' + `${checkValue(contact)}`;
 
                 document.getElementById('modal-type').innerText = 'หมวดหมู่งาน : ' + `${checkValue(array_type)}`;
                 document.getElementById('modal-description').innerText = 'รายละเอียดงาน : ' + `${checkValue(description)}`;
