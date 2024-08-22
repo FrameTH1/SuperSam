@@ -46,6 +46,8 @@
             $('#content').load('page/hire.php');
         }else if (page === 'history') {
             $('#content').load('page/history.php');
+        }else if (page === 'alert') {
+            $('#content').load('page/alert.php');
         } else {
             $('#content').load('page/find.php');
         }

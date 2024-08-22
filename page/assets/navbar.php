@@ -23,6 +23,7 @@
                                         <ul class='dropdown-menu' aria-labelledby='dropdownMenuButtonProfile'>
                                             <li><a class='dropdown-item cursor-pointer' onclick='goto(".'"profile"'.");'>บัญชีของฉัน</a></li>
                                             <li><a class='dropdown-item cursor-pointer' onclick='goto(".'"history"'.");'>โพสต์ของฉัน</a></li>
+                                            <li><a class='dropdown-item cursor-pointer' onclick='goto(".'"alert"'.");'>การแจ้งเตือนของฉัน</a></li>
                                             <li><a class='dropdown-item cursor-pointer' onclick='goto(".'"logout"'.");'>ออกจากระบบ</a></li>
                                         </ul>
                                     </div>";

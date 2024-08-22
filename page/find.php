@@ -368,14 +368,14 @@ session_start();
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle w-100" type="button"
                                 id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                ได้ทั้งสอง
+                                ไม่ระบุ
                             </button>
                             <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
                                 <!-- ฟอร์มส่งค่า verify = 2 -->
                                 <li>
                                     <input type="hidden" id="verifyValue" name="verify" value="2">
                                     <button class="dropdown-item text-center"
-                                        onclick="updateButtonText(this, 2);">ได้ทั้งสอง</button>
+                                        onclick="updateButtonText(this, 2);">ไม่ระบุ</button>
                                 </li>
                                 <!-- ฟอร์มส่งค่า verify = 1 -->
                                 <li>

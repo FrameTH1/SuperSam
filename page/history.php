@@ -178,7 +178,7 @@ session_start();
             </div>
         </form>
 
-        <div id="results" class="row mt-2"></div>
+        <div id="results" class="row mt-3"></div>
 
         <script>
             const form = document.getElementById('jobForm');
