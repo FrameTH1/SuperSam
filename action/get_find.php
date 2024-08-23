@@ -38,8 +38,7 @@ if (isset($_POST['verify'])) {
         ) r ON lj.employer_id = r.employer_id
         WHERE lj.status = 'รอคนหางาน'
         AND lm.verify = ?
-        AND lj.title LIKE ?
-        GROUP BY lj.employer_id, lj.title";
+        AND lj.title LIKE ?";
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("is", $_POST['verify'], $searchQuery);
@@ -84,8 +83,7 @@ if (isset($_POST['verify'])) {
             GROUP BY employer_id
         ) r ON lj.employer_id = r.employer_id
         WHERE lj.status = 'รอคนหางาน'
-        AND lj.title LIKE ?
-        GROUP BY lj.employer_id, lj.title";
+        AND lj.title LIKE ?";
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $searchQuery);

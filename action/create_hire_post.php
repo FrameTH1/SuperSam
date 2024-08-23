@@ -2,6 +2,10 @@
 session_start();
 include 'database.php';
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // รับข้อมูลจากฟอร์ม
 $jobTitle = $_POST['jobTitle'];
 $jobDescription = $_POST['jobDescription'];
