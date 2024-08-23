@@ -1,25 +1,35 @@
 <?php
 
-$userId = $_POST['userId'];
-$displayName = $_POST['displayName'];
-$statusMessage = $_POST['statusMessage'];
-$pictureUrl = $_POST['pictureUrl'];
-$email = $_POST['email'];
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 session_start();
-$_SESSION["userId"] = $_POST['userId'];
-$_SESSION["displayName"] = $_POST['displayName'];
-$_SESSION["statusMessage"] = $_POST['statusMessage'];
-$_SESSION["pictureUrl"] = $_POST['pictureUrl'];
-$_SESSION["email"] = $_POST['email'];
 
+$userId = isset($_POST['userId']) ? $_POST['userId'] : null;
+$displayName = isset($_POST['displayName']) ? $_POST['displayName'] : null;
+$statusMessage = isset($_POST['statusMessage']) ? $_POST['statusMessage'] : null;
+$pictureUrl = isset($_POST['pictureUrl']) ? $_POST['pictureUrl'] : null;
+$email = isset($_POST['email']) ? $_POST['email'] : null;
+
+if (!$userId || !$displayName) {
+    echo json_encode(['error' => 'Missing required parameters']);
+    exit;
+}
+
+$_SESSION["userId"] = $userId;
+$_SESSION["displayName"] = $displayName;
+$_SESSION["statusMessage"] = $statusMessage;
+$_SESSION["pictureUrl"] = $pictureUrl;
+$_SESSION["email"] = $email;
 
 include 'database.php';
 
-
-$sql = "SELECT * FROM `lakhok_mushroom` WHERE lineid = '" . $userId . "'";
-
-$result = $conn->query($sql);
+// ใช้ prepared statement
+$stmt = $conn->prepare("SELECT * FROM `lakhok_mushroom` WHERE lineid = ?");
+$stmt->bind_param("s", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     // ผู้ใช้มีอยู่ในฐานข้อมูล
@@ -30,11 +40,17 @@ if ($result->num_rows > 0) {
     echo json_encode(['exists' => true]);
 } else {
     // ไม่มีผู้ใช้, เพิ่มเข้าไป
-    $insertSql = "INSERT INTO `lakhok_mushroom` (`lineid`, `fname`) VALUES ('" . $userId . "','" . $displayName . "')";
-    $conn->query($insertSql);
+    $insertStmt = $conn->prepare("INSERT INTO `lakhok_mushroom` (`lineid`, `fname`, `profile_image`) VALUES (?, ?, ?)");
+    $insertStmt->bind_param("sss", $userId, $displayName, $pictureUrl);
+    $insertStmt->execute();
     echo json_encode(['exists' => false]);
 }
 
-
+// ปิด statement และ connection
+$stmt->close();
+if (isset($insertStmt)) {
+    $insertStmt->close();
+}
 $conn->close();
+
 ?>
