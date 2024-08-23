@@ -172,7 +172,7 @@ session_start();
             </div>
         </form>
 
-        <div class="w-100 mt-3 d-flex flex-column-reverse" id="results" class="row mt-2"></div>
+        <div class="w-100 mt-3" id="results" class="row mt-2"></div>
 
         <script>
 
@@ -189,11 +189,10 @@ session_start();
                     data.forEach(function (chat) {
                         var alertElement = document.createElement('div');
 
-                        if (chat.receiver_id == '<?php echo $_SESSION["userId"] ?>') {
+                        if (chat.sender_id == '<?php echo $_SESSION["userId"] ?>') {
                             if (chat.already_read == 1) {
                                 alertElement.classList.add('jobAlert', 'alert', 'alert-success', 'w-100');
                             } else {
-
                                 alertElement.classList.add('jobAlert', 'alert', 'alert-warning', 'w-100');
                                 alertElement.addEventListener('click', function () {
                                     var job_id = this.getAttribute('job_id');
@@ -210,9 +209,50 @@ session_start();
                                         .then(response => response.json())
                                         .then(data => {
                                             if (data.status === 'รอคนหางาน') {
-                                                window.location.href = '/?page=find&job=' + chat.job_id + '&id=' + chat.sender_id;
+                                                window.location.href = '/?page=find&job=' + chat.job_id + '&id=' + chat.receiver_id;
                                             } else if (data.status === 'รอคนจ้างงาน') {
-                                                window.location.href = '/?page=hire&job=' + chat.job_id + '&id=' + chat.sender_id;
+                                                window.location.href = '/?page=hire&job=' + chat.job_id + '&id=' + chat.receiver_id;
+                                            } else {
+                                                console.error('Unknown status:', data.status);
+                                            }
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error:', error);
+                                        });
+                                });
+
+                            }
+
+                            alertElement.setAttribute('job_id', `${chat.job_id}`);
+                            alertElement.setAttribute('role', 'alert');
+                            alertElement.innerHTML = `
+                            <p class="h5">หัวข้อ : มีข้อความใหม่ !</p>
+                            <p class="h6">ที่มา : ${chat.title}</p>
+                            `;
+                            results.appendChild(alertElement);
+                        }else if (chat.receiver_id == '<?php echo $_SESSION["userId"] ?>') {
+                            if (chat.already_read == 1) {
+                                alertElement.classList.add('jobAlert', 'alert', 'alert-success', 'w-100');
+                            } else {
+                                alertElement.classList.add('jobAlert', 'alert', 'alert-warning', 'w-100');
+                                alertElement.addEventListener('click', function () {
+                                    var job_id = this.getAttribute('job_id');
+
+                                    fetch('action/check_chat_alert.php', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: new URLSearchParams({
+                                            job_id: job_id
+                                        })
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.status === 'รอคนหางาน') {
+                                                window.location.href = '/?page=find&job=' + chat.job_id + '&id=' + chat.receiver_id;
+                                            } else if (data.status === 'รอคนจ้างงาน') {
+                                                window.location.href = '/?page=hire&job=' + chat.job_id + '&id=' + chat.receiver_id;
                                             } else {
                                                 console.error('Unknown status:', data.status);
                                             }

@@ -401,9 +401,13 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
             document.getElementById('refreshButton').addEventListener('click', function () {
                 var job_id = localStorage.getItem('id_post_hire'); // ระบุ job_id ของงานนั้นๆ
 
-                var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
-                var receiver_id = localStorage.getItem('employee_id_post_hire'); // ใส่ค่า receiver_id ของคุณ
-
+                if (getParameterByName('job') != null & getParameterByName('id') != null) {
+                    var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
+                }else {
+                    var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = localStorage.getItem('employee_id_post_hire'); // ใส่ค่า receiver_id ของคุณ
+                }
 
                 var chatMessages = document.getElementById('chatMessages');
                 chatMessages.innerHTML = ''; // ล้างข้อความเก่าออกก่อน
@@ -443,11 +447,18 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
 
             document.getElementById('chatModal').addEventListener('shown.bs.modal', function () {
                 var job_id = localStorage.getItem('id_post_hire'); // ระบุ job_id ของงานนั้นๆ
-                var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
-                var receiver_id = localStorage.getItem('employee_id_post_hire'); // ใส่ค่า receiver_id ของคุณ
+
+                if (getParameterByName('job') == null & getParameterByName('id') == null) {
+                    var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = localStorage.getItem('employee_id_post_hire'); // ใส่ค่า receiver_id ของคุณ
+                } else {
+                    var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
+                }
+                
                 var fname = localStorage.getItem('fname');
 
-                fname = fname.length > 8 ? fname.substring(0, 8) + ".." : fname;
+                fname = fname != null ? "ผู้หางาน" : "ผู้จ้างงาน" ;
 
                 var chatMessages = document.getElementById('chatMessages');
                 chatMessages.innerHTML = ''; // ล้างข้อความเก่าออกก่อน
@@ -455,7 +466,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 const chatModalTitle = document.getElementById("chatModalLabel");
                 chatModalTitle.childNodes.forEach(node => {
                     if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() === "แชทกับ") {
-                        node.nodeValue = "แชทกับ " + fname;
+                        node.nodeValue = "แชทกับ" + fname;
                     }
                 });
 
@@ -500,7 +511,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                     var sender_id = localStorage.getItem('employee_id_post_hire'); // ใส่ค่า sender_id ของคุณ
                     var receiver_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า receiver_id ของคุณ
                 } else {
-                    var sender_id = localStorage.getItem('employee_id_post_hire'); // ใส่ค่า sender_id ของคุณ
+                    var sender_id = getParameterByName('id'); // ใส่ค่า sender_id ของคุณ
                     var receiver_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า receiver_id ของคุณ
                 }
 
@@ -546,8 +557,8 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
             if (getParameterByName('job') != null & getParameterByName('id') != null) {
                 var message = document.getElementById('chatInput').value;
                 var job_id = getParameterByName('job');
-                var sender_id = getParameterByName('id'); // ใส่ค่า sender_id ของคุณ
-                var receiver_id = '<?php echo $_SESSION["userId"] ?>';
+                var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
 
                 localStorage.setItem('employee_id_post_hire', sender_id);
 
