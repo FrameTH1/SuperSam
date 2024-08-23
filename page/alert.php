@@ -193,6 +193,7 @@ session_start();
                             if (chat.already_read == 1) {
                                 alertElement.classList.add('jobAlert', 'alert', 'alert-success', 'w-100');
                             } else {
+
                                 alertElement.classList.add('jobAlert', 'alert', 'alert-warning', 'w-100');
                                 alertElement.addEventListener('click', function () {
                                     var job_id = this.getAttribute('job_id');
