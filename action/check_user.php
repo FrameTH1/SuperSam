@@ -34,6 +34,8 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     // ผู้ใช้มีอยู่ในฐานข้อมูล
     $row = $result->fetch_assoc(); // ดึงข้อมูลแถวแรก
+    $_SESSION["pictureUrl"] = $row["profile_image"]; 
+    $_SESSION["displayName"] = $row["fname"]; // ใช้ค่าจากแถวที่ดึงมาfname
     $_SESSION["tel"] = $row["tel"]; // ใช้ค่าจากแถวที่ดึงมา
     $_SESSION["contact"] = $row["contact"]; // ใช้ค่าจากแถวที่ดึงมา
     $_SESSION["id"] = $row["id"]; // ใช้ค่าจากแถวที่ดึงมา

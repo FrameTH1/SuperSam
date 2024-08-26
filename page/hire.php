@@ -319,7 +319,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                         <p class="h6" id="modal-price"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#chatModal"
+                        <button type="button" class="btn btn-warning btn-contact" data-bs-toggle="modal" data-bs-target="#chatModal"
                             data-bs-dismiss="modal">ติดต่อผู้หางาน</button>
                         <button type="button" class="btn btn-success">จ้างงาน</button>
                     </div>
@@ -354,6 +354,16 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 document.getElementById('modal-type').innerText = 'หมวดหมู่งาน : ' + `${checkValue(array_type)}`;
                 document.getElementById('modal-description').innerText = 'รายละเอียดงาน : ' + `${checkValue(description)}`;
                 document.getElementById('modal-price').innerText = 'ราคา : ' + `${price} บาท`;
+
+                // ตรวจสอบว่า id ตรงกับ $_SESSION["userId"] หรือไม่
+                var sessionUserId = <?php echo json_encode($_SESSION["userId"]); ?>;
+                var contactButton = document.querySelector('.btn-contact');
+
+                if (id !== sessionUserId) {
+                    contactButton.disabled = false;
+                } else {
+                    contactButton.disabled = true;
+                }
 
                 // แสดง Modal
                 var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
@@ -404,7 +414,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 if (getParameterByName('job') != null & getParameterByName('id') != null) {
                     var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
                     var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
-                }else {
+                } else {
                     var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
                     var receiver_id = localStorage.getItem('employee_id_post_hire'); // ใส่ค่า receiver_id ของคุณ
                 }
@@ -451,14 +461,45 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 if (getParameterByName('job') == null & getParameterByName('id') == null) {
                     var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
                     var receiver_id = localStorage.getItem('employee_id_post_hire'); // ใส่ค่า receiver_id ของคุณ
+
+                    // ดึงประวัติการแชทจากฐานข้อมูล
+                    fetch('action/load_chat.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            sender_id: sender_id,
+                            receiver_id: receiver_id,
+                            job_id: job_id
+                        })
+                    })
+                        .then(response => response.json()) // สมมติว่าเซิร์ฟเวอร์ส่ง JSON กลับมา
+                        .then(data => {
+                            data.forEach(function (chat) {
+                                var messageElement = document.createElement('div');
+                                if (chat.receiver_id == sender_id) {
+                                    messageElement.classList.add('d-flex', 'justify-content-end', 'mb-2');
+                                    messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
+                                } else {
+                                    messageElement.classList.add('d-flex', 'justify-content-start', 'mb-2');
+                                    messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
+                                }
+                                chatMessages.appendChild(messageElement);
+                            });
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
                 } else {
                     var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
                     var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
                 }
-                
+
                 var fname = localStorage.getItem('fname');
 
-                fname = fname != null ? "ผู้หางาน" : "ผู้จ้างงาน" ;
+                fname = fname != null ? "ผู้หางาน" : "ผู้จ้างงาน";
 
                 var chatMessages = document.getElementById('chatMessages');
                 chatMessages.innerHTML = ''; // ล้างข้อความเก่าออกก่อน
@@ -469,37 +510,6 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                         node.nodeValue = "แชทกับ" + fname;
                     }
                 });
-
-                // ดึงประวัติการแชทจากฐานข้อมูล
-                fetch('action/load_chat.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        sender_id: sender_id,
-                        receiver_id: receiver_id,
-                        job_id: job_id
-                    })
-                })
-                    .then(response => response.json()) // สมมติว่าเซิร์ฟเวอร์ส่ง JSON กลับมา
-                    .then(data => {
-                        data.forEach(function (chat) {
-                            var messageElement = document.createElement('div');
-                            if (chat.receiver_id == sender_id) {
-                                messageElement.classList.add('d-flex', 'justify-content-end', 'mb-2');
-                                messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
-                            } else {
-                                messageElement.classList.add('d-flex', 'justify-content-start', 'mb-2');
-                                messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
-                            }
-                            chatMessages.appendChild(messageElement);
-                        });
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
             });
 
 
@@ -560,6 +570,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
                 var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
 
+                localStorage.setItem('id_post_hire', job_id);
                 localStorage.setItem('employee_id_post_hire', sender_id);
 
                 var chatModal = new bootstrap.Modal(document.getElementById('chatModal'));

@@ -172,7 +172,7 @@ session_start();
             </div>
         </form>
 
-        <div class="w-100 mt-3" id="results" class="row mt-2"></div>
+        <div class="w-100 mt-3 d-flex flex-column-reverse" id="results"></div>
 
         <script>
 
