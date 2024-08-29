@@ -12,7 +12,6 @@ session_start();
 </head>
 
 <style>
-
     .card {
         border-color: black;
         border-width: 1px;
@@ -21,7 +20,8 @@ session_start();
     }
 
     .card::-webkit-scrollbar {
-        width: 0px; /* ความกว้างของ scrollbar */
+        width: 0px;
+        /* ความกว้างของ scrollbar */
     }
 
     .text-neon-green {
@@ -154,6 +154,10 @@ session_start();
     .select_bar_width {
         width: calc(100% - (16px * 2));
     }
+
+    .text-black {
+        color: black !important;
+    }
 </style>
 
 <body>
@@ -243,7 +247,7 @@ session_start();
                             const percentage = (rating / max_rating) * 100; // คำนวณเป็นเปอร์เซ็นต์
                             const content = `
                             <div class="col-6 col-lg-3 px-2 mt-2">
-                                <div class="shadow card" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '`+JSON.parse(row.types)+`')">
+                                 <div class="shadow card" onclick="openModal('${row.title}', '${row.img}', '${row.price}', '${row.fname}', '${rating}', '${row.rating_count}', '${row.profile_image}', '${row.verify}', '${row.contact}', '${row.description}', '` + JSON.parse(row.types) + `', '${row.id}', '${row.employee_id}', '${row.id_post}')">
                                     <img class="w-100 img rounded-3" src="${row.img}" alt="">
                                     <div class="px-1">
                                         <div class="px-1 w-100 mt-2 d-flex justify-content-between">
@@ -302,7 +306,7 @@ session_start();
                         <hr>
                         <p class="h6" id="modal-fname"></p>
                         <div class="d-flex gap-1 mb-2">
-                            <p class="h6 my-auto">คะแนนผู้จ้าง : </p>
+                            <p class="h6 my-auto">คะแนนผู้หางาน : </p>
                             <div class="d-flex">
                                 <div class="Stars my-auto" id="modal-stars" style="--rating: 0;"></div>
                                 <p class="my-auto h6" id="modal-rating-count"></p>
@@ -315,7 +319,9 @@ session_start();
                         <p class="h6" id="modal-price"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">ติดต่อผู้จ้างงาน</button>
+                        <button type="button" class="btn btn-warning btn-contact text-black" data-bs-toggle="modal"
+                            data-bs-target="#chatModal" data-bs-dismiss="modal">ติดต่อผู้จ้างงาน</button>
+                        <button type="button" class="btn btn-success btn-confirm text-black">รับงาน</button>
                     </div>
                 </div>
             </div>
@@ -331,9 +337,11 @@ session_start();
                 return input === null | input === 'null' ? 0 : input;
             }
 
-            function openModal(title, img, price, fname, rating, rating_count, profile_image, verify, contact, description, array_type) {
-
-                console.log(array_type);
+            function openModal(title, img, price, fname, rating, rating_count, profile_image, verify, contact, description, array_type, id, employee_id, id_post) {
+                
+                localStorage.setItem('id_post_find', id_post);
+                localStorage.setItem('employer_id_post_find', id);
+                localStorage.setItem('fname', fname);
 
                 document.getElementById('modal-title').innerText = title;
                 document.getElementById('modal-img').src = img;
@@ -346,6 +354,19 @@ session_start();
                 document.getElementById('modal-description').innerText = 'รายละเอียดงาน : ' + `${checkValue(description)}`;
                 document.getElementById('modal-price').innerText = 'ราคา : ' + `${price} บาท`;
 
+                // ตรวจสอบว่า id ตรงกับ $_SESSION["userId"] หรือไม่
+                var sessionUserId = <?php echo json_encode($_SESSION["userId"]); ?>;
+                var contactButton = document.querySelector('.btn-contact');
+                var confirmButton = document.querySelector('.btn-confirm');
+
+                if (id !== sessionUserId) {
+                    contactButton.disabled = false;
+                    confirmButton.disabled = false;
+                } else {
+                    contactButton.disabled = true;
+                    confirmButton.disabled = true;
+                }
+
                 // แสดง Modal
                 var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
                 myModal.show();
@@ -353,6 +374,245 @@ session_start();
         </script>
 
         <div id="results" class="row mt-2"></div>
+
+        <!-- Chat Modal -->
+        <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="chatModalLabel">
+                            แชทกับ
+                            <button class="btn btn-primary ms-1 rounded" id="refreshButton">รีเฟรชแชท</button>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- แสดงข้อความแชท -->
+                        <div id="chatMessages" style="max-height: 300px; overflow-y: auto;">
+                            <!-- ตัวอย่างข้อความ -->
+                            <!-- <div class="d-flex justify-content-start mb-2">
+                                <div class="p-2 bg-light rounded">ข้อความของผู้รับ</div>
+                            </div>
+                            <div class="d-flex justify-content-end mb-2">
+                                <div class="p-2 bg-light rounded">ข้อความของผู้ส่ง</div>
+                            </div> -->
+                        </div>
+                        <!-- ช่องพิมพ์ข้อความ -->
+                        <div class="input-group mt-3">
+                            <input type="text" id="chatInput" class="form-control"
+                                placeholder="พิมพ์ข้อความของคุณที่นี่...">
+                            <button class="btn btn-success me-1" id="sendButton">ส่ง</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            document.getElementById('refreshButton').addEventListener('click', function () {
+                var job_id = localStorage.getItem('id_post_find'); // ระบุ job_id ของงานนั้นๆ
+
+                if (getParameterByName('job') != null & getParameterByName('id') != null) {
+                    var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
+                } else {
+                    var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = localStorage.getItem('employer_id_post_find'); // ใส่ค่า receiver_id ของคุณ
+                }
+
+                var chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = ''; // ล้างข้อความเก่าออกก่อน
+
+                // ดึงประวัติการแชทจากฐานข้อมูล
+                fetch('action/load_chat.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        sender_id: sender_id,
+                        receiver_id: receiver_id,
+                        job_id: job_id
+                    })
+                })
+                    .then(response => response.json()) // สมมติว่าเซิร์ฟเวอร์ส่ง JSON กลับมา
+                    .then(data => {
+                        data.forEach(function (chat) {
+                            var messageElement = document.createElement('div');
+                            if (chat.receiver_id == sender_id) {
+                                messageElement.classList.add('d-flex', 'justify-content-end', 'mb-2');
+                                messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
+                            } else {
+                                messageElement.classList.add('d-flex', 'justify-content-start', 'mb-2');
+                                messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
+                            }
+                            chatMessages.appendChild(messageElement);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+
+
+            document.getElementById('chatModal').addEventListener('shown.bs.modal', function () {
+                var job_id = localStorage.getItem('id_post_find'); // ระบุ job_id ของงานนั้นๆ
+
+                if (getParameterByName('job') == null & getParameterByName('id') == null) {
+                    var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = localStorage.getItem('employer_id_post_find'); // ใส่ค่า receiver_id ของคุณ
+
+                    // ดึงประวัติการแชทจากฐานข้อมูล
+                    fetch('action/load_chat.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            sender_id: sender_id,
+                            receiver_id: receiver_id,
+                            job_id: job_id
+                        })
+                    })
+                        .then(response => response.json()) // สมมติว่าเซิร์ฟเวอร์ส่ง JSON กลับมา
+                        .then(data => {
+                            data.forEach(function (chat) {
+                                var messageElement = document.createElement('div');
+                                if (chat.receiver_id == sender_id) {
+                                    messageElement.classList.add('d-flex', 'justify-content-end', 'mb-2');
+                                    messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
+                                } else {
+                                    messageElement.classList.add('d-flex', 'justify-content-start', 'mb-2');
+                                    messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
+                                }
+                                chatMessages.appendChild(messageElement);
+                            });
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                } else {
+                    var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
+                }
+
+                var fname = localStorage.getItem('fname');
+
+                fname = fname != null ? "ผู้จ้างงาน" : "";
+
+                var chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = ''; // ล้างข้อความเก่าออกก่อน
+
+                const chatModalTitle = document.getElementById("chatModalLabel");
+                chatModalTitle.childNodes.forEach(node => {
+                    if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() === "แชทกับ") {
+                        node.nodeValue = "แชทกับ" + fname;
+                    }
+                });
+            });
+
+
+            document.getElementById('sendButton').addEventListener('click', function () {
+                var message = document.getElementById('chatInput').value;
+                var job_id = localStorage.getItem('id_post_find'); // ระบุ job_id ของงานนั้นๆ
+
+                if (getParameterByName('job') == null & getParameterByName('id') == null) {
+                    var sender_id = localStorage.getItem('employer_id_post_find'); // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า receiver_id ของคุณ
+                } else {
+                    var sender_id = getParameterByName('id'); // ใส่ค่า sender_id ของคุณ
+                    var receiver_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า receiver_id ของคุณ
+                }
+
+                if (message.trim() !== '') {
+                    // แสดงข้อความในหน้าจอแชท
+                    var chatMessages = document.getElementById('chatMessages');
+                    var messageElement = document.createElement('div');
+                    messageElement.classList.add('d-flex', 'justify-content-end', 'mb-2');
+                    messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + message + '</div>';
+                    chatMessages.appendChild(messageElement);
+
+                    // ส่งข้อมูลไปยังเซิร์ฟเวอร์เพื่อบันทึกในฐานข้อมูลด้วย fetch API
+                    fetch('action/save_chat.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            message: message,
+                            sender_id: sender_id,
+                            receiver_id: receiver_id,
+                            job_id: job_id
+                        })
+                    })
+                        .then(response => response.text()) // เปลี่ยนเป็น response.json() ถ้าคุณส่ง JSON กลับ
+                        .then(data => {
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+
+                    // ล้างช่องข้อความ
+                    document.getElementById('chatInput').value = '';
+                }
+            });
+
+            function getParameterByName(name) {
+                const url = new URL(window.location.href);
+                return url.searchParams.get(name);
+            }
+
+            if (getParameterByName('job') != null & getParameterByName('id') != null) {
+                var message = document.getElementById('chatInput').value;
+                var job_id = getParameterByName('job');
+                var sender_id = '<?php echo $_SESSION["userId"] ?>'; // ใส่ค่า sender_id ของคุณ
+                var receiver_id = getParameterByName('id'); // ใส่ค่า receiver_id ของคุณ
+
+                localStorage.setItem('id_post_find', job_id);
+                localStorage.setItem('employer_id_post_find', sender_id);
+
+                var chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
+                chatModal.show();
+
+                var chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = ''; // ล้างข้อความเก่าออกก่อน
+
+                // ดึงประวัติการแชทจากฐานข้อมูล
+                fetch('action/load_chat.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        sender_id: sender_id,
+                        receiver_id: receiver_id,
+                        job_id: job_id
+                    })
+                })
+                    .then(response => response.json()) // สมมติว่าเซิร์ฟเวอร์ส่ง JSON กลับมา
+                    .then(data => {
+                        data.forEach(function (chat) {
+                            var messageElement = document.createElement('div');
+                            if (chat.receiver_id == sender_id) {
+                                messageElement.classList.add('d-flex', 'justify-content-end', 'mb-2');
+                                messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
+                            } else {
+                                messageElement.classList.add('d-flex', 'justify-content-start', 'mb-2');
+                                messageElement.innerHTML = '<div class="p-2 bg-light rounded">' + chat.message + '</div>';
+                            }
+                            chatMessages.appendChild(messageElement);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            };
+        </script>
 
         <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
             aria-hidden="true">
@@ -409,8 +669,8 @@ session_start();
                     <form id="jobForm" enctype="multipart/form-data" method="POST">
                         <div class="modal-body">
                             <p class="h5 text-center">แนบรูปภาพ</p>
-                            <input class="form-control" accept=".png, .jpg, .jpeg" type="file" id="jobImage" name="jobImage" accept="image/*"
-                                required>
+                            <input class="form-control" accept=".png, .jpg, .jpeg" type="file" id="jobImage"
+                                name="jobImage" accept="image/*" required>
                             <p class="h5 mt-2 text-center">ชื่อของงาน</p>
                             <input class="form-control" type="text" id="jobTitle" name="jobTitle"
                                 placeholder="ชื่อของงานที่ต้องทำ" required>
@@ -430,7 +690,8 @@ session_start();
                                     </div>
                                     <div class="col-8 ps-1">
                                         <!-- Input -->
-                                        <input class="form-control" type="number" id="jobPrice" name="jobPrice" placeholder="ราคาที่ต้องการ" step="1" required>
+                                        <input class="form-control" type="number" id="jobPrice" name="jobPrice"
+                                            placeholder="ราคาที่ต้องการ" step="1" required>
                                     </div>
                                 </div>
                                 <p class="h5 my-auto">บาท</p>

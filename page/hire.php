@@ -158,6 +158,10 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
     .select_bar_width {
         width: calc(100% - (16px * 2));
     }
+
+    .text-black {
+        color: black !important;
+    }
 </style>
 
 <body>
@@ -319,9 +323,9 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                         <p class="h6" id="modal-price"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-warning btn-contact" data-bs-toggle="modal" data-bs-target="#chatModal"
+                        <button type="button" class="btn btn-warning btn-contact text-black" data-bs-toggle="modal" data-bs-target="#chatModal"
                             data-bs-dismiss="modal">ติดต่อผู้หางาน</button>
-                        <button type="button" class="btn btn-success">จ้างงาน</button>
+                        <button type="button" class="btn btn-success btn-confirm text-black">จ้างงาน</button>
                     </div>
                 </div>
             </div>
@@ -358,11 +362,14 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 // ตรวจสอบว่า id ตรงกับ $_SESSION["userId"] หรือไม่
                 var sessionUserId = <?php echo json_encode($_SESSION["userId"]); ?>;
                 var contactButton = document.querySelector('.btn-contact');
+                var confirmButton = document.querySelector('.btn-confirm');
 
                 if (id !== sessionUserId) {
                     contactButton.disabled = false;
+                    confirmButton.disabled = false;
                 } else {
                     contactButton.disabled = true;
+                    confirmButton.disabled = true;
                 }
 
                 // แสดง Modal
@@ -499,7 +506,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
 
                 var fname = localStorage.getItem('fname');
 
-                fname = fname != null ? "ผู้หางาน" : "ผู้จ้างงาน";
+                fname = fname != null ? "ผู้หางาน" : "";
 
                 var chatMessages = document.getElementById('chatMessages');
                 chatMessages.innerHTML = ''; // ล้างข้อความเก่าออกก่อน
