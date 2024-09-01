@@ -319,9 +319,10 @@ session_start();
                         <p class="h6" id="modal-price"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-warning btn-contact text-black" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-secondary btn-contact" data-bs-toggle="modal"
                             data-bs-target="#chatModal" data-bs-dismiss="modal">ติดต่อผู้จ้างงาน</button>
-                        <button type="button" class="btn btn-success btn-confirm text-black">รับงาน</button>
+                        <button type="button" class="btn btn-success btn-confirm" data-bs-toggle="modal"
+                            data-bs-target="#confirmModal" data-bs-dismiss="modal">รับงาน</button>
                     </div>
                 </div>
             </div>
@@ -338,7 +339,7 @@ session_start();
             }
 
             function openModal(title, img, price, fname, rating, rating_count, profile_image, verify, contact, description, array_type, id, employee_id, id_post) {
-                
+
                 localStorage.setItem('id_post_find', id_post);
                 localStorage.setItem('employer_id_post_find', id);
                 localStorage.setItem('fname', fname);
@@ -371,6 +372,55 @@ session_start();
                 var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
                 myModal.show();
             }
+        </script>
+
+        <!-- Modal สำหรับยืนยันการรับงาน -->
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">ยืนยันการรับงาน</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        คุณแน่ใจหรือไม่ว่าต้องการรับงานนี้?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                        <button type="button" class="btn btn-success btn-confirm-accept">ยืนยันการรับ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.querySelector('.btn-confirm-accept').addEventListener('click', function () {
+                // ดึง id_post จาก localStorage
+                const idPost = localStorage.getItem('id_post_find');
+
+                // ส่งข้อมูลไปยัง set_post_status.php
+                fetch('action/set_post_status.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(
+                        { 'id_post': idPost }
+                    )
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            $('#confirmModal').modal('hide');  // ใช้ jQuery เพื่อปิด modal
+                        } else {
+                            // แสดงข้อความหรือดำเนินการเมื่อเกิดข้อผิดพลาด
+                            console.error('เกิดข้อผิดพลาดในการอัพเดทสถานะ');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('เกิดข้อผิดพลาดในการเชื่อมต่อ:', error);
+                    });
+            });
         </script>
 
         <div id="results" class="row mt-2"></div>

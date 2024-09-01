@@ -208,9 +208,9 @@ session_start();
                                     })
                                         .then(response => response.json())
                                         .then(data => {
-                                            if (data.status === 'รอคนหางาน') {
+                                            if (data.status === 'รอคนหางาน' || data.status === 'กำลังดำเนินการของหางาน') {
                                                 window.location.href = '/?page=find&job=' + chat.job_id + '&id=' + chat.receiver_id;
-                                            } else if (data.status === 'รอคนจ้างงาน') {
+                                            } else if (data.status === 'รอคนจ้างงาน' || data.status === 'กำลังดำเนินการของจ้างงาน') {
                                                 window.location.href = '/?page=hire&job=' + chat.job_id + '&id=' + chat.receiver_id;
                                             } else {
                                                 console.error('Unknown status:', data.status);

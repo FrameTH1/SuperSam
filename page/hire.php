@@ -323,9 +323,10 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                         <p class="h6" id="modal-price"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-warning btn-contact text-black" data-bs-toggle="modal" data-bs-target="#chatModal"
-                            data-bs-dismiss="modal">ติดต่อผู้หางาน</button>
-                        <button type="button" class="btn btn-success btn-confirm text-black">จ้างงาน</button>
+                        <button type="button" class="btn btn-secondary btn-contact" data-bs-toggle="modal"
+                            data-bs-target="#chatModal" data-bs-dismiss="modal">ติดต่อผู้หางาน</button>
+                        <button type="button" class="btn btn-success btn-confirm" data-bs-toggle="modal"
+                            data-bs-target="#confirmModal" data-bs-dismiss="modal">จ้างงาน</button>
                     </div>
                 </div>
             </div>
@@ -378,6 +379,57 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
             }
         </script>
 
+        <!-- Modal สำหรับยืนยันการจ้างงาน -->
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">ยืนยันการจ้างงาน</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        คุณแน่ใจหรือไม่ว่าต้องการจ้างงานนี้?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                        <button type="button" class="btn btn-success btn-confirm-accept">ยืนยันการจ้าง</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.querySelector('.btn-confirm-accept').addEventListener('click', function () {
+                // ดึง id_post จาก localStorage
+                const idPost = localStorage.getItem('id_post_hire');
+
+                // ส่งข้อมูลไปยัง set_post_status.php
+                fetch('action/set_post_status.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(
+                        { 'id_post': idPost }
+                    )
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // ทำสิ่งที่คุณต้องการเมื่ออัพเดทสำเร็จ
+                            // ตัวอย่าง: ปิด Modal
+                            $('#confirmModal').modal('hide');  // ใช้ jQuery เพื่อปิด modal
+                        } else {
+                            // แสดงข้อความหรือดำเนินการเมื่อเกิดข้อผิดพลาด
+                            console.error('เกิดข้อผิดพลาดในการอัพเดทสถานะ');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('เกิดข้อผิดพลาดในการเชื่อมต่อ:', error);
+                    });
+            });
+        </script>
+
         <div id="results" class="row mt-2"></div>
 
         <!-- Chat Modal -->
@@ -386,7 +438,7 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="chatModalLabel">
-                            แชทกับ
+                            แชท
                             <button class="btn btn-primary ms-1 rounded" id="refreshButton">รีเฟรชแชท</button>
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -511,12 +563,6 @@ $jobs_type = ["รอดำเนินการ", "กำลังดำเน�
                 var chatMessages = document.getElementById('chatMessages');
                 chatMessages.innerHTML = ''; // ล้างข้อความเก่าออกก่อน
 
-                const chatModalTitle = document.getElementById("chatModalLabel");
-                chatModalTitle.childNodes.forEach(node => {
-                    if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() === "แชทกับ") {
-                        node.nodeValue = "แชทกับ" + fname;
-                    }
-                });
             });
 
 
