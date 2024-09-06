@@ -258,22 +258,11 @@ session_start();
                     confirmButton.style.display = 'block'; // หรือ 'inline-block' ขึ้นอยู่กับการจัดวางปุ่ม
                 }
 
-                if (row.status === 'การดำเนินการจ้างงานเสร็จสิ้น' || row.status === 'การดำเนินการหางานเสร็จสิ้น') {
-                    contactButton.style.display = 'none';
-                } else {
-                    contactButton.style.display = 'block'; // หรือ 'inline-block' ขึ้นอยู่กับการจัดวางปุ่ม
-                }
-
-                if (row.fname === sessionDisplayName) {
-                    contactButton.style.display = 'none';
-                }else {
-                    contactButton.style.display = 'block';
-                }
 
                 if (row.fname === sessionDisplayName && (row.status !== 'รอคนหางาน' && row.status !== 'รอคนจ้างงาน')) {
-                    confirmButton.style.display = 'block'; // แสดงปุ่ม
+                    confirmButton.style.display = 'none'; // แสดงปุ่ม
                 } else {
-                    confirmButton.style.display = 'none'; // ซ่อนปุ่ม
+                    confirmButton.style.display = 'block'; // ซ่อนปุ่ม
                 }
 
                 localStorage.setItem('id_post', row.id);
